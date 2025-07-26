@@ -13,7 +13,7 @@
 
 ```bash
 # Clone and setup
-git clone <repository-url>
+git clone https://github.com/JasonCoate/project-agent-mcp.git
 cd project-agent
 
 # Configure environment variables
