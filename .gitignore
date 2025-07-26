@@ -13,7 +13,10 @@ mcp-server/build/
 database/
 mcp-server/data/
 
-# Test reports with user-specific paths
+# Test reports and results (keep directory, ignore contents)
+test-results/*
+!test-results/.gitkeep
+# Test reports (now in test-results/)
 FINAL_TEST_REPORT.md
 TEST_REPORT.md
 

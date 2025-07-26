@@ -16,7 +16,7 @@ sqlite3 database/project.db < database/schema.sql
 
 # Set permissions
 chmod +x scripts/*.sh
-chmod +x clients/universal-mcp-client.js
+chmod +x clients/universal-mcp-client.ts
 
 # Create systemd service (optional)
 if command -v systemctl &> /dev/null; then
@@ -43,4 +43,4 @@ fi
 
 echo "Setup complete!"
 echo "Start the MCP server with: npm start"
-echo "Or use the universal client: ./clients/universal-mcp-client.js"
+echo "Or use the universal client: npm run test:clients"

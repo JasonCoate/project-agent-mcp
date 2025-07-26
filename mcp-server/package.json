@@ -7,10 +7,10 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "test": "npm run build && node test-mcp.js",
-    "test:create": "npm run build && node test-create-project.js",
-    "test:comprehensive": "npm run build && node test-comprehensive.js",
-    "test:integration": "npm run build && node test-integration.js",
+    "test": "npm run build && node dist/test-mcp.js",
+    "test:create": "npm run build && node dist/test-create-project.js",
+    "test:comprehensive": "npm run build && node dist/test-comprehensive.js",
+    "test:integration": "npm run build && node dist/test-integration.js",
     "test:all": "npm run test && npm run test:comprehensive && npm run test:integration"
   },
   "dependencies": {

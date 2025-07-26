@@ -1,17 +1,38 @@
 #!/usr/bin/env node
 
 // Test script to create a project and verify functionality
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 
-function testCreateProject() {
+interface MCPRequest {
+  jsonrpc: string;
+  id: number;
+  method: string;
+  params: {
+    name: string;
+    arguments: Record<string, any>;
+  };
+}
+
+interface MCPResponse {
+  jsonrpc: string;
+  id: number;
+  result?: any;
+  error?: {
+    code: number;
+    message: string;
+    data?: any;
+  };
+}
+
+function testCreateProject(): void {
   console.log('Testing MCP Server - Create Project...');
   
-  const server = spawn('node', ['dist/index.js'], {
+  const server: ChildProcess = spawn('node', ['dist/index.js'], {
     stdio: ['pipe', 'pipe', 'pipe']
   });
 
-  let step = 0;
-  const tests = [
+  let step: number = 0;
+  const tests: MCPRequest[] = [
     // Step 1: Create a project
     {
       jsonrpc: '2.0',
@@ -37,10 +58,10 @@ function testCreateProject() {
     }
   ];
 
-  function runNextTest() {
+  function runNextTest(): void {
     if (step < tests.length) {
       console.log(`\n📝 Running test ${step + 1}/${tests.length}...`);
-      server.stdin.write(JSON.stringify(tests[step]) + '\n');
+      server.stdin?.write(JSON.stringify(tests[step]) + '\n');
       step++;
     } else {
       console.log('\n🏁 All tests completed!');
@@ -49,9 +70,9 @@ function testCreateProject() {
     }
   }
 
-  server.stdout.on('data', (data) => {
+  server.stdout?.on('data', (data: Buffer) => {
     try {
-      const response = JSON.parse(data.toString());
+      const response: MCPResponse = JSON.parse(data.toString());
       console.log('✅ Response:', JSON.stringify(response, null, 2));
       
       // Wait a bit before next test
@@ -62,7 +83,7 @@ function testCreateProject() {
     }
   });
 
-  server.stderr.on('data', (data) => {
+  server.stderr?.on('data', (data: Buffer) => {
     console.log('Server info:', data.toString());
     // Start first test after server is ready
     if (step === 0) {

@@ -7,11 +7,11 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "resolveJsonModule": true,
     "declaration": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test-*.ts"],
   "exclude": ["node_modules", "dist"]
 }

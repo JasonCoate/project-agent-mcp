@@ -3,19 +3,53 @@
 // Comprehensive test suite for Project Agent MCP Server
 // Tests all tools according to the PRD requirements
 
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
+
+interface MCPRequest {
+  jsonrpc: string;
+  id: number;
+  method: string;
+  params: {
+    name: string;
+    arguments: Record<string, any>;
+  };
+}
+
+interface MCPResponse {
+  jsonrpc: string;
+  id: number;
+  result?: {
+    isError?: boolean;
+    content?: Array<{ text: string }>;
+  };
+  error?: {
+    code: number;
+    message: string;
+    data?: any;
+  };
+}
+
+interface TestCase {
+  name: string;
+  request: MCPRequest;
+}
+
+interface TestResult {
+  name: string;
+  status: 'PASS' | 'FAIL';
+  result?: any;
+  error?: string;
+}
 
 class MCPTester {
-  constructor() {
-    this.server = null;
-    this.testResults = [];
-    this.currentTest = 0;
-    this.projectId = null;
-    this.specId = null;
-    this.taskId = null;
-  }
+  private server: ChildProcess | null = null;
+  private testResults: TestResult[] = [];
+  private currentTest: number = 0;
+  private projectId: string | null = null;
+  private specId: string | null = null;
+  private taskId: string | null = null;
 
-  async runTests() {
+  async runTests(): Promise<void> {
     console.log('🚀 Starting Comprehensive MCP Server Test Suite...');
     console.log('Testing all tools according to PRD requirements\n');
 
@@ -23,7 +57,7 @@ class MCPTester {
       stdio: ['pipe', 'pipe', 'pipe']
     });
 
-    this.server.stderr.on('data', (data) => {
+    this.server.stderr?.on('data', (data: Buffer) => {
       console.log('📡 Server:', data.toString().trim());
       // Start tests after server is ready
       if (data.toString().includes('running on stdio')) {
@@ -31,7 +65,7 @@ class MCPTester {
       }
     });
 
-    this.server.stdout.on('data', (data) => {
+    this.server.stdout?.on('data', (data: Buffer) => {
       this.handleResponse(data);
     });
 
@@ -42,15 +76,15 @@ class MCPTester {
     }, 30000);
   }
 
-  handleResponse(data) {
+  private handleResponse(data: Buffer): void {
     try {
-      const response = JSON.parse(data.toString());
+      const response: MCPResponse = JSON.parse(data.toString());
       const test = this.tests[this.currentTest - 1];
       
       console.log(`✅ ${test.name}:`);
       
       if (response.result && !response.result.isError) {
-        const content = JSON.parse(response.result.content[0].text);
+        const content = JSON.parse(response.result.content![0].text);
         console.log(`   Result: ${JSON.stringify(content, null, 2).substring(0, 200)}...`);
         
         // Store IDs for subsequent tests
@@ -60,19 +94,19 @@ class MCPTester {
         
         this.testResults.push({ name: test.name, status: 'PASS', result: content });
       } else {
-        console.log(`   ❌ Error: ${response.result?.content[0]?.text || 'Unknown error'}`);
-        this.testResults.push({ name: test.name, status: 'FAIL', error: response.result?.content[0]?.text });
+        console.log(`   ❌ Error: ${response.result?.content?.[0]?.text || 'Unknown error'}`);
+        this.testResults.push({ name: test.name, status: 'FAIL', error: response.result?.content?.[0]?.text });
       }
     } catch (e) {
-      console.log(`   ❌ Parse Error: ${e.message}`);
-      this.testResults.push({ name: this.tests[this.currentTest - 1]?.name, status: 'FAIL', error: e.message });
+      console.log(`   ❌ Parse Error: ${(e as Error).message}`);
+      this.testResults.push({ name: this.tests[this.currentTest - 1]?.name, status: 'FAIL', error: (e as Error).message });
     }
 
     // Wait before next test
     setTimeout(() => this.runNextTest(), 1500);
   }
 
-  runNextTest() {
+  private runNextTest(): void {
     if (this.currentTest < this.tests.length) {
       const test = this.tests[this.currentTest];
       console.log(`\n📝 Test ${this.currentTest + 1}/${this.tests.length}: ${test.name}`);
@@ -83,14 +117,14 @@ class MCPTester {
       if (this.specId) request = request.replace('{{SPEC_ID}}', this.specId);
       if (this.taskId) request = request.replace('{{TASK_ID}}', this.taskId);
       
-      this.server.stdin.write(request + '\n');
+      this.server?.stdin?.write(request + '\n');
       this.currentTest++;
     } else {
       this.showResults();
     }
   }
 
-  showResults() {
+  private showResults(): void {
     console.log('\n' + '='.repeat(60));
     console.log('📊 TEST RESULTS SUMMARY');
     console.log('='.repeat(60));
@@ -113,14 +147,14 @@ class MCPTester {
     this.cleanup();
   }
 
-  cleanup() {
+  private cleanup(): void {
     if (this.server) {
       this.server.kill();
     }
     process.exit(0);
   }
 
-  get tests() {
+  private get tests(): TestCase[] {
     return [
       // Project Management Tests
       {

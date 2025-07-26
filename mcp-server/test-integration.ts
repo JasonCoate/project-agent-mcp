@@ -3,15 +3,44 @@
 // Integration test to verify MCP server works with actual MCP clients
 // This simulates how the server would be used in production
 
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
+
+interface MCPRequest {
+  jsonrpc: string;
+  id: number;
+  method: string;
+  params: {
+    name: string;
+    arguments: Record<string, any>;
+  };
+}
+
+interface MCPResponse {
+  jsonrpc: string;
+  id: number;
+  result?: {
+    isError?: boolean;
+    content: Array<{ text: string }>;
+  };
+  error?: {
+    code: number;
+    message: string;
+  };
+}
+
+interface TestStep {
+  step: string;
+  description: string;
+  request: MCPRequest;
+}
 
 class IntegrationTester {
-  constructor() {
-    this.server = null;
-    this.projectId = null;
-  }
+  private server: ChildProcess | null = null;
+  private projectId: string | null = null;
+  private currentStep: number = 0;
+  private scenario: TestStep[] = [];
 
-  async runIntegrationTest() {
+  async runIntegrationTest(): Promise<void> {
     console.log('🔗 Starting MCP Server Integration Test...');
     console.log('This test simulates real-world usage scenarios\n');
 
@@ -19,14 +48,14 @@ class IntegrationTester {
       stdio: ['pipe', 'pipe', 'pipe']
     });
 
-    this.server.stderr.on('data', (data) => {
+    this.server.stderr?.on('data', (data: Buffer) => {
       console.log('📡 Server Status:', data.toString().trim());
       if (data.toString().includes('running on stdio')) {
         setTimeout(() => this.runScenario(), 1000);
       }
     });
 
-    this.server.stdout.on('data', (data) => {
+    this.server.stdout?.on('data', (data: Buffer) => {
       this.handleResponse(data);
     });
 
@@ -37,13 +66,13 @@ class IntegrationTester {
     }, 15000);
   }
 
-  async runScenario() {
+  private async runScenario(): Promise<void> {
     console.log('🎯 Running Real-World Scenario: "Building a Web App"\n');
     
     // Scenario: A developer wants to build a web application
     // They use the MCP server to manage the project lifecycle
     
-    const scenario = [
+    const scenario: TestStep[] = [
       {
         step: 'Create Project',
         description: 'Developer creates a new web app project',
@@ -164,7 +193,7 @@ class IntegrationTester {
     this.executeNextStep();
   }
 
-  executeNextStep() {
+  private executeNextStep(): void {
     if (this.currentStep < this.scenario.length) {
       const step = this.scenario[this.currentStep];
       console.log(`📋 Step ${this.currentStep + 1}: ${step.step}`);
@@ -175,16 +204,16 @@ class IntegrationTester {
         request = request.replace(/{{PROJECT_ID}}/g, this.projectId);
       }
       
-      this.server.stdin.write(request + '\n');
+      this.server?.stdin?.write(request + '\n');
       this.currentStep++;
     } else {
       this.showIntegrationResults();
     }
   }
 
-  handleResponse(data) {
+  private handleResponse(data: Buffer): void {
     try {
-      const response = JSON.parse(data.toString());
+      const response: MCPResponse = JSON.parse(data.toString());
       
       if (response.result && !response.result.isError) {
         const content = JSON.parse(response.result.content[0].text);
@@ -202,13 +231,14 @@ class IntegrationTester {
         console.log(`   ❌ Error: ${response.result?.content[0]?.text}`);
       }
     } catch (e) {
-      console.log(`   ❌ Parse error: ${e.message}`);
+      const error = e as Error;
+      console.log(`   ❌ Parse error: ${error.message}`);
     }
 
     setTimeout(() => this.executeNextStep(), 1000);
   }
 
-  showIntegrationResults() {
+  private showIntegrationResults(): void {
     console.log('\n' + '='.repeat(60));
     console.log('🎉 INTEGRATION TEST COMPLETED');
     console.log('='.repeat(60));
@@ -228,7 +258,7 @@ class IntegrationTester {
     this.cleanup();
   }
 
-  cleanup() {
+  private cleanup(): void {
     if (this.server) {
       this.server.kill();
     }

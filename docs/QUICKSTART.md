@@ -47,7 +47,7 @@ The server runs on stdio and is ready for MCP connections.
 
 ```bash
 # In a new terminal, from project root
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
 **Expected Output:**
@@ -130,7 +130,7 @@ n8n start
 ### Universal CLI Client
 
 ```bash
-./clients/universal-mcp-client.js
+npm run test:clients
 
 > create-project "My Awesome App"
 > get-context <project-id>
@@ -168,7 +168,7 @@ npm start
 ls -la mcp-server/data/
 
 # If missing, run demo to create sample data
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
 ### N8N Workflows Failing
