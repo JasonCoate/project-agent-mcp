@@ -1,27 +1,49 @@
 #!/usr/bin/env node
 
 // Simple test script to verify MCP server functionality
-import { spawn } from 'child_process';
+import { spawn, ChildProcess } from 'child_process';
 
-function testMCPServer() {
+interface MCPRequest {
+  jsonrpc: string;
+  id: number;
+  method: string;
+}
+
+interface MCPResponse {
+  jsonrpc: string;
+  id: number;
+  result?: {
+    tools?: Array<{
+      name: string;
+      description: string;
+    }>;
+  };
+  error?: {
+    code: number;
+    message: string;
+    data?: any;
+  };
+}
+
+function testMCPServer(): void {
   console.log('Testing MCP Server...');
   
-  const server = spawn('node', ['dist/index.js'], {
+  const server: ChildProcess = spawn('node', ['dist/index.js'], {
     stdio: ['pipe', 'pipe', 'pipe']
   });
 
   // Test list tools request
-  const listToolsRequest = {
+  const listToolsRequest: MCPRequest = {
     jsonrpc: '2.0',
     id: 1,
     method: 'tools/list'
   };
 
-  server.stdin.write(JSON.stringify(listToolsRequest) + '\n');
+  server.stdin?.write(JSON.stringify(listToolsRequest) + '\n');
 
-  server.stdout.on('data', (data) => {
+  server.stdout?.on('data', (data: Buffer) => {
     try {
-      const response = JSON.parse(data.toString());
+      const response: MCPResponse = JSON.parse(data.toString());
       console.log('Server Response:', JSON.stringify(response, null, 2));
       
       if (response.result && response.result.tools) {
@@ -35,7 +57,7 @@ function testMCPServer() {
     }
   });
 
-  server.stderr.on('data', (data) => {
+  server.stderr?.on('data', (data: Buffer) => {
     console.log('Server started:', data.toString());
   });
 

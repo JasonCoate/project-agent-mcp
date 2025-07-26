@@ -20,7 +20,7 @@ The Project Agent MCP Server includes four fully functional N8N workflows that p
 
 Run the integration demo to see everything working:
 ```bash
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
 This demonstrates:

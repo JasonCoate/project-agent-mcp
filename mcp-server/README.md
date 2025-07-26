@@ -63,15 +63,15 @@ Run the test scripts to verify functionality:
 
 ```bash
 # Test tool listing
-node test-mcp.js
+npm run test
 
 # Test project creation
-node test-create-project.js
+npm run test:create
 ```
 
 ## Trae IDE Integration
 
-The server is configured for Trae IDE integration via `../trae-config/project-agent.json`:
+The server is configured for Trae IDE integration via `../configs/trae-config/project-agent.json`:
 
 - **Shortcuts:**
   - `Ctrl+Shift+P` - Get project context

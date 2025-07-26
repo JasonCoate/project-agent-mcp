@@ -113,7 +113,7 @@ graph TB
 
 6. **Test Integration**:
    ```bash
-   node n8n-integration-demo.js
+   npm run test:integration
    # Demonstrates full workflow integration
    ```
 
@@ -277,7 +277,7 @@ export interface ProjectContext {
 ```typescript
 import sqlite3 from 'sqlite3';
 import { promisify } from 'util';
-import { Project, Spec, Task, MemoryEntry } from './types/index.js';
+import { Project, Spec, Task, MemoryEntry } from './types/index.ts';
 
 export class DatabaseManager {
   private db: sqlite3.Database;
@@ -475,7 +475,7 @@ export class DatabaseManager {
 
 ```typescript
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { DatabaseManager } from '../database.js';
+import { DatabaseManager } from '../database.ts';
 import { z } from 'zod';
 
 const createProjectSchema = z.object({
@@ -599,7 +599,7 @@ export class ProjectManagerTool {
 
 ```typescript
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { DatabaseManager } from '../database.js';
+import { DatabaseManager } from '../database.ts';
 import { z } from 'zod';
 
 const createSpecSchema = z.object({
@@ -788,7 +788,7 @@ export class SpecManagerTool {
 
 ```typescript
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { DatabaseManager } from '../database.js';
+import { DatabaseManager } from '../database.ts';
 import { z } from 'zod';
 
 const createTaskSchema = z.object({
@@ -975,8 +975,8 @@ export class TaskManagerTool {
 
 ```typescript
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { DatabaseManager } from '../database.js';
-import { ProjectContext } from '../types/index.js';
+import { DatabaseManager } from '../database.ts';
+import { ProjectContext } from '../types/index.ts';
 
 export class ContextManagerTool {
   constructor(private db: DatabaseManager) {}
@@ -1149,11 +1149,11 @@ import {
   ListToolsResult
 } from '@modelcontextprotocol/sdk/types.js';
 
-import { DatabaseManager } from './database.js';
-import { ProjectManagerTool } from './tools/project-manager.js';
-import { SpecManagerTool } from './tools/spec-manager.js';
-import { TaskManagerTool } from './tools/task-manager.js';
-import { ContextManagerTool } from './tools/context-manager.js';
+import { DatabaseManager } from './database.ts';
+import { ProjectManagerTool } from './tools/project-manager.ts';
+import { SpecManagerTool } from './tools/spec-manager.ts';
+import { TaskManagerTool } from './tools/task-manager.ts';
+import { ContextManagerTool } from './tools/context-manager.ts';
 
 class ProjectAgentServer {
   private server: Server;
@@ -1931,7 +1931,7 @@ const path = require('path');
 cd mcp-server && npm run build
 
 # 2. Run the integration demo
-node n8n-integration-demo.js
+npm run test:integration
 
 # 3. Check N8N workflows (if running)
 # Visit http://localhost:5678 to see workflow executions
@@ -1951,7 +1951,7 @@ node n8n-integration-demo.js
 
 ### 1. Cursor AI Configuration
 
-**cursor-config/mcp-settings.json**
+**configs/cursor-config/mcp-settings.json**
 
 
 ```json
@@ -2036,7 +2036,7 @@ await mcp.call("create_task", {
 
 ### 2. Trae IDE Integration
 
-**trae-config/project-agent.json**
+**configs/trae-config/project-agent.json**
 ```json
 {
   "name": "Project Agent",
@@ -2058,7 +2058,7 @@ await mcp.call("create_task", {
 
 ### 3. Gemini CLI Integration
 
-**gemini-config/.geminirc**
+**configs/gemini-config/.geminirc**
 
 
 ```bash
@@ -2074,7 +2074,7 @@ gemini config set mcp.servers.project-agent.env.DATABASE_PATH "$PROJECT_AGENT_DB
 
 ### 4. Universal MCP Client
 
-**clients/universal-mcp-client.js**
+**clients/universal-mcp-client.ts**
 
 ```javascript
 #!/usr/bin/env node
@@ -2268,7 +2268,7 @@ sqlite3 database/project.db < database/schema.sql
 
 # Set permissions
 chmod +x scripts/*.sh
-chmod +x clients/universal-mcp-client.js
+chmod +x clients/universal-mcp-client.ts
 
 # Create systemd service (optional)
 if command -v systemctl &> /dev/null; then
@@ -2295,7 +2295,7 @@ fi
 
 echo "Setup complete!"
 echo "Start the MCP server with: npm start"
-echo "Or use the universal client: ./clients/universal-mcp-client.js"
+echo "Or use the universal client: ./clients/universal-mcp-client.ts"
 ```
 
 ### 2. Start Script
@@ -2582,7 +2582,7 @@ const context = await mcp.call("get_project_context", {
 
 ```bash
 # Morning check via universal client
-./clients/universal-mcp-client.js
+npm run test:clients
 > get-context project-123
 
 # Update task progress in any tool

@@ -290,7 +290,7 @@ After setup, you'll have these webhook endpoints:
 1. **Create a test project** using MCP server:
 ```bash
 cd ${PROJECT_ROOT}/mcp-server
-node test-create-project.js
+npm run test:create
 ```
 
 2. **Trigger workflows** by posting to webhooks:
@@ -645,7 +645,7 @@ To verify everything is working, run the integration demo:
 
 ```bash
 cd /path/to/project-agent
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
 **Expected Output:**

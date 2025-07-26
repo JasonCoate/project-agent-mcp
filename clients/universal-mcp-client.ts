@@ -1,25 +1,52 @@
 #!/usr/bin/env node
 
-const { spawn } = require('child_process');
-const readline = require('readline');
+import { spawn, ChildProcess } from 'child_process';
+import * as readline from 'readline';
+
+interface MCPRequest {
+  jsonrpc: string;
+  id: number;
+  method: string;
+  params?: Record<string, any>;
+}
+
+interface MCPResponse {
+  jsonrpc: string;
+  id: number;
+  result?: any;
+  error?: {
+    code: number;
+    message: string;
+    data?: any;
+  };
+}
+
+interface MCPTool {
+  name: string;
+  description: string;
+  inputSchema: Record<string, any>;
+}
+
+interface PendingRequest {
+  resolve: (value: any) => void;
+  reject: (reason: any) => void;
+}
 
 class MCPClient {
-  constructor() {
-    this.serverProcess = null;
-    this.messageId = 0;
-    this.pendingRequests = new Map();
-  }
+  private serverProcess: ChildProcess | null = null;
+  private messageId: number = 0;
+  private pendingRequests: Map<number, PendingRequest> = new Map();
 
-  async start() {
+  async start(): Promise<void> {
     this.serverProcess = spawn('node', ['./mcp-server/dist/index.js'], {
       stdio: ['pipe', 'pipe', 'pipe'],
     });
 
-    this.serverProcess.stdout.on('data', (data) => {
+    this.serverProcess.stdout?.on('data', (data: Buffer) => {
       this.handleResponse(data.toString());
     });
 
-    this.serverProcess.stderr.on('data', (data) => {
+    this.serverProcess.stderr?.on('data', (data: Buffer) => {
       console.error('MCP Server Error:', data.toString());
     });
 
@@ -34,7 +61,7 @@ class MCPClient {
       'Available commands: list, create-project, get-context, help, exit'
     );
 
-    rl.on('line', async (input) => {
+    rl.on('line', async (input: string) => {
       await this.handleCommand(input.trim());
       rl.prompt();
     });
@@ -42,7 +69,7 @@ class MCPClient {
     rl.prompt();
   }
 
-  async handleCommand(command) {
+  private async handleCommand(command: string): Promise<void> {
     const [cmd, ...args] = command.split(' ');
 
     switch (cmd) {
@@ -66,9 +93,9 @@ class MCPClient {
     }
   }
 
-  async sendRequest(method, params = {}) {
+  private async sendRequest(method: string, params: Record<string, any> = {}): Promise<any> {
     const id = ++this.messageId;
-    const request = {
+    const request: MCPRequest = {
       jsonrpc: '2.0',
       id,
       method,
@@ -77,13 +104,13 @@ class MCPClient {
 
     return new Promise((resolve, reject) => {
       this.pendingRequests.set(id, { resolve, reject });
-      this.serverProcess.stdin.write(JSON.stringify(request) + '\n');
+      this.serverProcess?.stdin?.write(JSON.stringify(request) + '\n');
     });
   }
 
-  handleResponse(data) {
+  private handleResponse(data: string): void {
     try {
-      const response = JSON.parse(data);
+      const response: MCPResponse = JSON.parse(data);
       const pending = this.pendingRequests.get(response.id);
 
       if (pending) {
@@ -99,19 +126,19 @@ class MCPClient {
     }
   }
 
-  async listTools() {
+  private async listTools(): Promise<void> {
     try {
       const result = await this.sendRequest('tools/list');
       console.log('\nAvailable Tools:');
-      result.tools.forEach((tool) => {
+      result.tools.forEach((tool: MCPTool) => {
         console.log(`- ${tool.name}: ${tool.description}`);
       });
     } catch (error) {
-      console.error('Error listing tools:', error.message);
+      console.error('Error listing tools:', (error as Error).message);
     }
   }
 
-  async createProject(args) {
+  private async createProject(args: string[]): Promise<void> {
     const name = args.join(' ');
     if (!name) {
       console.log('Usage: create-project <project name>');
@@ -125,11 +152,11 @@ class MCPClient {
       });
       console.log('Project created:', result);
     } catch (error) {
-      console.error('Error creating project:', error.message);
+      console.error('Error creating project:', (error as Error).message);
     }
   }
 
-  async getContext(projectId) {
+  private async getContext(projectId: string): Promise<void> {
     if (!projectId) {
       console.log('Usage: get-context <project-id>');
       return;
@@ -142,11 +169,11 @@ class MCPClient {
       });
       console.log('Project Context:', JSON.stringify(result, null, 2));
     } catch (error) {
-      console.error('Error getting context:', error.message);
+      console.error('Error getting context:', (error as Error).message);
     }
   }
 
-  showHelp() {
+  private showHelp(): void {
     console.log(`
 Available Commands:
   list                    - List all available MCP tools

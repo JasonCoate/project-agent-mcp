@@ -15,10 +15,10 @@ cd project-agent
 cd mcp-server && npm install && npm start
 
 # Test integration (in new terminal)
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
-For detailed setup instructions, see [QUICKSTART.md](QUICKSTART.md).
+For detailed setup instructions, see [QUICKSTART.md](docs/QUICKSTART.md).
 
 ## Features
 
@@ -30,7 +30,7 @@ For detailed setup instructions, see [QUICKSTART.md](QUICKSTART.md).
 
 ## Documentation
 
-- [QUICKSTART.md](QUICKSTART.md) - Detailed setup guide
+- [QUICKSTART.md](docs/QUICKSTART.md) - Detailed setup guide
 - [Project Agent PRD](docs/project-agent-prd.md) - Complete implementation guide
 - [N8N Setup Guide](docs/N8N_SETUP_GUIDE.md) - Installation and configuration
 - [N8N Integration Guide](docs/N8N_INTEGRATION_GUIDE.md) - Workflows and examples
@@ -39,7 +39,7 @@ For detailed setup instructions, see [QUICKSTART.md](QUICKSTART.md).
 
 ```bash
 # Test the integration
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
 ## How It Works
@@ -57,7 +57,7 @@ The system provides project context to AI assistants through MCP, enabling them 
 - **Continue.dev** - VS Code extension with MCP tools
 - **Trae IDE** - Built-in MCP server integration
 - **Gemini CLI** - Command-line AI with MCP support
-- **Universal CLI Client** - Included interface (`clients/universal-mcp-client.js`)
+- **Universal CLI Client** - Included interface (`clients/universal-mcp-client.ts`)
 
 ## N8N Workflows
 
@@ -87,17 +87,17 @@ The system provides project context to AI assistants through MCP, enabling them 
 cd mcp-server && npm start
 
 # Test with Universal CLI (new terminal)
-./clients/universal-mcp-client.js
+npm run test:clients
 
 # Or run the integration demo
-node n8n-integration-demo.js
+npm run test:integration
 ```
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch
-3. Test your changes with `node n8n-integration-demo.js`
+3. Test your changes with `npm run test:integration`
 4. Submit a pull request
 
 ## License
