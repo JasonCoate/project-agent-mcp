@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "project-agent": {
+      "command": "node",
+      "args": [
+        "${PROJECT_ROOT}/mcp-server/dist/index.js"
+      ],
+      "env": {
+        "DATABASE_PATH": "${PROJECT_ROOT}/database/project.db"
+      }
+    }
+  }
+}

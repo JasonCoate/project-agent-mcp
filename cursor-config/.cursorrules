@@ -1,0 +1,66 @@
+# Project Agent Rules
+
+## Available MCP Tools
+
+Use the project-agent MCP server for all project management tasks:
+
+### Project Management
+
+- create_project: Create new projects
+- get_project: Get project details  
+- update_project: Update project status/details
+- list_projects: List all projects
+
+### Specifications
+
+- create_spec: Create project specifications
+- get_specs: Get all specs for a project
+- update_spec: Update specification details
+- validate_specs: Check spec consistency
+
+### Task Management  
+
+- create_task: Create new tasks
+- update_task_progress: Update task status/progress
+- get_tasks: Get project tasks
+- analyze_progress: Get progress analysis
+
+### Context & Memory
+
+- get_project_context: Get full project context
+- add_context_note: Add notes to project memory
+- search_context- search_context: Search project history
+
+## Usage Guidelines
+
+1. Always get project context before making changes
+2. Log important decisions using add_context_note
+3. Validate specs after major changes
+4. Use analyze_progress to identify bottlenecks
+5. Create tasks linked to specifications when possible
+
+## Example Usage
+
+```typescript
+// Get project overview
+const context = await mcp.call("get_project_context", {
+  project_id: "project-123"
+});
+
+// Create a new feature spec
+const specId = await mcp.call("create_spec", {
+  project_id: "project-123",
+  type: "requirement",
+  title: "User Authentication",
+  content: "Users must be able to log in securely...",
+  priority: "high"
+});
+
+// Create related tasks
+await mcp.call("create_task", {
+  project_id: "project-123",
+  spec_id: specId,
+  title: "Implement JWT authentication",
+  description: "Set up JWT token-based auth system"
+});
+```

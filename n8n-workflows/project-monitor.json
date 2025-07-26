@@ -1,0 +1,177 @@
+{
+  "name": "Project Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "SELECT",
+        "query": "SELECT id, name, status FROM projects WHERE status = 'active'"
+      },
+      "name": "Get Active Projects",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const projects = items[0].json;\nconst results = [];\n\nfor (const project of projects) {\n  // Get tasks for each project\n  const taskQuery = `\n    SELECT \n      COUNT(*) as total_tasks,\n      SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) as completed_tasks,\n      SUM(CASE WHEN status = 'blocked' THEN 1 ELSE 0 END) as blocked_tasks,\n      AVG(progress) as avg_progress\n    FROM tasks \n    WHERE project_id = '${project.id}'\n  `;\n  \n  results.push({\n    project_id: project.id,\n    project_name: project.name,\n    status: project.status,\n    query: taskQuery\n  });\n}\n\nreturn results;"
+      },
+      "name": "Analyze Projects",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "SELECT",
+        "query": "={{ $json.query }}"
+      },
+      "name": "Get Project Stats",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const stats = items[0].json[0];\nconst project = items[0].json;\n\n// Check for issues\nconst issues = [];\n\nif (stats.blocked_tasks > 0) {\n  issues.push(`${stats.blocked_tasks} blocked tasks`);\n}\n\nif (stats.avg_progress < 20 && stats.total_tasks > 5) {\n  issues.push('Low overall progress');\n}\n\nif (stats.total_tasks === 0) {\n  issues.push('No tasks defined');\n}\n\nreturn [{\n  project_id: project.project_id,\n  project_name: project.project_name,\n  stats: stats,\n  issues: issues,\n  needs_attention: issues.length > 0\n}];"
+      },
+      "name": "Check Issues",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needs_attention }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Has Issues?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "INSERT",
+        "query": "INSERT INTO memory_log (id, project_id, event_type, content, metadata) VALUES ('{{ $json.project_id }}-alert-{{ $now }}', '{{ $json.project_id }}', 'issue', 'Project needs attention: {{ $json.issues.join(\", \") }}', '{{ JSON.stringify({source: \"n8n_monitor\", stats: $json.stats}) }}')"
+      },
+      "name": "Log Alert",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Active Projects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active Projects": {
+      "main": [
+        [
+          {
+            "node": "Analyze Projects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Projects": {
+      "main": [
+        [
+          {
+            "node": "Get Project Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Project Stats": {
+      "main": [
+        [
+          {
+            "node": "Check Issues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Issues": {
+      "main": [
+        [
+          {
+            "node": "Has Issues?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Issues?": {
+      "main": [
+        [
+          {
+            "node": "Log Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

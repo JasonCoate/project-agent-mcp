@@ -1,0 +1,8 @@
+# Project Agent MCP Configuration
+export MCP_SERVER_PATH="./mcp-server/dist/index.js"
+export PROJECT_AGENT_DB="./database/project.db"
+
+# Enable MCP tools
+gemini config set mcp.enabled true
+gemini config set mcp.servers.project-agent.command "node $MCP_SERVER_PATH"
+gemini config set mcp.servers.project-agent.env.DATABASE_PATH "$PROJECT_AGENT_DB"

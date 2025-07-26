@@ -1,0 +1,197 @@
+{
+  "name": "MCP Server Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */6 * * *"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd ${PROJECT_ROOT} && echo 'list_projects' | npx @modelcontextprotocol/cli ${PROJECT_ROOT}/mcp-server/build/index.js",
+        "additionalFields": {}
+      },
+      "name": "Get Projects via MCP",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse MCP response and extract project data\nconst output = items[0].json.stdout;\nconst lines = output.split('\\n');\n\n// Find the JSON response line\nlet projectsData = null;\nfor (const line of lines) {\n  try {\n    const parsed = JSON.parse(line);\n    if (parsed.result && Array.isArray(parsed.result)) {\n      projectsData = parsed.result;\n      break;\n    }\n  } catch (e) {\n    // Continue searching\n  }\n}\n\nif (!projectsData) {\n  return [{ error: 'No valid project data found' }];\n}\n\n// Process each project\nconst results = [];\nfor (const project of projectsData) {\n  if (project.status === 'active') {\n    results.push({\n      project_id: project.id,\n      project_name: project.name,\n      project_status: project.status,\n      needs_analysis: true\n    });\n  }\n}\n\nreturn results;"
+      },
+      "name": "Process Projects",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd ${PROJECT_ROOT} && echo '{\"tool\": \"analyze_progress\", \"arguments\": {\"project_id\": \"{{ $json.project_id }}\"}}' | npx @modelcontextprotocol/cli ${PROJECT_ROOT}/mcp-server/build/index.js",
+        "additionalFields": {}
+      },
+      "name": "Analyze Project Progress",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse MCP analysis response\nconst output = items[0].json.stdout;\nconst lines = output.split('\\n');\n\nlet analysisData = null;\nfor (const line of lines) {\n  try {\n    const parsed = JSON.parse(line);\n    if (parsed.result) {\n      analysisData = parsed.result;\n      break;\n    }\n  } catch (e) {\n    // Continue searching\n  }\n}\n\nif (!analysisData) {\n  return [{ error: 'No valid analysis data found' }];\n}\n\n// Check for issues that need attention\nconst issues = [];\nconst warnings = [];\n\nif (analysisData.overdue_tasks > 0) {\n  issues.push(`${analysisData.overdue_tasks} overdue tasks`);\n}\n\nif (analysisData.blocked_tasks > 0) {\n  issues.push(`${analysisData.blocked_tasks} blocked tasks`);\n}\n\nif (analysisData.overall_progress < 25) {\n  warnings.push('Low overall progress');\n}\n\nif (analysisData.completed_tasks === 0 && analysisData.total_tasks > 0) {\n  warnings.push('No completed tasks yet');\n}\n\nreturn [{\n  project_id: items[0].json.project_id,\n  project_name: items[0].json.project_name,\n  analysis: analysisData,\n  issues: issues,\n  warnings: warnings,\n  needs_attention: issues.length > 0 || warnings.length > 0\n}];"
+      },
+      "name": "Evaluate Analysis",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.needs_attention }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Needs Attention?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd ${PROJECT_ROOT} && echo '{\"tool\": \"add_context_note\", \"arguments\": {\"project_id\": \"{{ $json.project_id }}\", \"content\": \"N8N Automated Alert: {{ $json.issues.concat($json.warnings).join(\", \") }}\", \"event_type\": \"issue\", \"metadata\": {{ JSON.stringify({source: \"n8n_automation\", analysis: $json.analysis}) }}}}' | npx @modelcontextprotocol/cli ${PROJECT_ROOT}/mcp-server/build/index.js",
+        "additionalFields": {}
+      },
+      "name": "Log Alert via MCP",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Send notification (could be email, Slack, etc.)\nconst project = items[0].json;\n\nconst notification = {\n  type: 'project_alert',\n  project_id: project.project_id,\n  project_name: project.project_name,\n  message: `Project \"${project.project_name}\" needs attention`,\n  details: {\n    issues: project.issues,\n    warnings: project.warnings,\n    progress: project.analysis.overall_progress,\n    overdue_tasks: project.analysis.overdue_tasks,\n    blocked_tasks: project.analysis.blocked_tasks\n  },\n  timestamp: new Date().toISOString()\n};\n\nconsole.log('🚨 PROJECT ALERT:', JSON.stringify(notification, null, 2));\n\nreturn [notification];"
+      },
+      "name": "Send Notification",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Projects via MCP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Projects via MCP": {
+      "main": [
+        [
+          {
+            "node": "Process Projects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Projects": {
+      "main": [
+        [
+          {
+            "node": "Analyze Project Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Project Progress": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Analysis": {
+      "main": [
+        [
+          {
+            "node": "Needs Attention?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs Attention?": {
+      "main": [
+        [
+          {
+            "node": "Log Alert via MCP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Alert via MCP": {
+      "main": [
+        [
+          {
+            "node": "Send Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

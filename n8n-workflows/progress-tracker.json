@@ -1,0 +1,181 @@
+{
+  "name": "Progress Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "task-update",
+        "responseMode": "responseNode"
+      },
+      "name": "Task Update Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "SELECT",
+        "query": "SELECT * FROM tasks WHERE project_id = '{{ $json.body.project_id }}'"
+      },
+      "name": "Get Project Tasks",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const tasks = items[0].json;\nconst totalTasks = tasks.length;\nconst completedTasks = tasks.filter(t => t.status === 'done').length;\nconst blockedTasks = tasks.filter(t => t.status === 'blocked').length;\nconst inProgressTasks = tasks.filter(t => t.status === 'in-progress').length;\n\nconst overallProgress = totalTasks > 0 \n  ? Math.round(tasks.reduce((sum, task) => sum + task.progress, 0) / totalTasks)\n  : 0;\n\n// Calculate velocity (tasks completed in last 7 days)\nconst weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);\nconst recentCompletions = tasks.filter(t => \n  t.status === 'done' && new Date(t.updated_at) > weekAgo\n).length;\n\n// Identify trends\nconst trends = [];\nif (blockedTasks > totalTasks * 0.2) {\n  trends.push('High number of blocked tasks');\n}\nif (overallProgress < 30 && totalTasks > 5) {\n  trends.push('Low overall progress');\n}\nif (recentCompletions === 0 && totalTasks > 0) {\n  trends.push('No recent task completions');\n}\n\nreturn [{\n  project_id: items[0].json.body?.project_id || '',\n  progress_summary: {\n    total_tasks: totalTasks,\n    completed_tasks: completedTasks,\n    blocked_tasks: blockedTasks,\n    in_progress_tasks: inProgressTasks,\n    overall_progress: overallProgress,\n    weekly_velocity: recentCompletions,\n    trends: trends\n  }\n}];"
+      },
+      "name": "Calculate Progress",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "INSERT",
+        "query": "INSERT INTO memory_log (id, project_id, event_type, content, metadata) VALUES ('{{ $json.project_id }}-progress-{{ $now }}', '{{ $json.project_id }}', 'milestone', 'Progress update: {{ $json.progress_summary.overall_progress }}% complete', '{{ JSON.stringify($json.progress_summary) }}')"
+      },
+      "name": "Log Progress",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.progress_summary.trends.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "name": "Has Concerns?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "INSERT",
+        "query": "INSERT INTO memory_log (id, project_id, event_type, content, metadata) VALUES ('{{ $json.project_id }}-concern-{{ $now }}', '{{ $json.project_id }}', 'issue', 'Progress concerns detected', '{{ JSON.stringify({trends: $json.progress_summary.trends, source: \"progress_tracker\"}) }}')"
+      },
+      "name": "Log Concerns",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, progress: $json.progress_summary } }}"
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        380
+      ]
+    }
+  ],
+  "connections": {
+    "Task Update Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Project Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Project Tasks": {
+      "main": [
+        [
+          {
+            "node": "Calculate Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Progress": {
+      "main": [
+        [
+          {
+            "node": "Log Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Progress": {
+      "main": [
+        [
+          {
+            "node": "Has Concerns?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Concerns?": {
+      "main": [
+        [
+          {
+            "node": "Log Concerns",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Concerns": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "name": "Spec Validator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "spec-change",
+        "responseMode": "responseNode"
+      },
+      "name": "Spec Change Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "SELECT",
+        "query": "SELECT * FROM project_specs WHERE project_id = '{{ $json.body.project_id }}' AND status = 'active'"
+      },
+      "name": "Get Project Specs",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const specs = items[0].json;\nconst validation = {\n  valid: true,\n  issues: [],\n  warnings: []\n};\n\n// Check for spec types coverage\nconst types = new Set(specs.map(s => s.type));\nconst requiredTypes = ['requirement', 'technical'];\n\nfor (const type of requiredTypes) {\n  if (!types.has(type)) {\n    validation.issues.push(`Missing ${type} specifications`);\n    validation.valid = false;\n  }\n}\n\n// Check for priority distribution\nconst priorities = specs.map(s => s.priority);\nconst criticalCount = priorities.filter(p => p === 'critical').length;\n\nif (criticalCount > 3) {\n  validation.warnings.push('Too many critical priority specs');\n}\n\n// Check for outdated specs\nconst oldSpecs = specs.filter(s => {\n  const daysSinceUpdate = (Date.now() - new Date(s.updated_at).getTime()) / (1000 * 60 * 60 * 24);\n  return daysSinceUpdate > 30;\n});\n\nif (oldSpecs.length > 0) {\n  validation.warnings.push(`${oldSpecs.length} specs not updated in 30+ days`);\n}\n\nreturn [{\n  project_id: items[0].json.body?.project_id || '',\n  validation: validation,\n  spec_count: specs.length\n}];"
+      },
+      "name": "Validate Specs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ !$json.validation.valid || $json.validation.warnings.length > 0 }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Has Issues?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "db_path": "${PROJECT_ROOT}/mcp-server/data/project-agent.db",
+        "query_type": "INSERT",
+        "query": "INSERT INTO memory_log (id, project_id, event_type, content, metadata) VALUES ('{{ $json.project_id }}-validation-{{ $now }}', '{{ $json.project_id }}', 'validation', 'Spec validation completed', '{{ JSON.stringify($json.validation) }}')"
+      },
+      "name": "Log Validation",
+      "type": "n8n-nodes-sqlite3.sqliteNode",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, validation: $json.validation } }}"
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Spec Change Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Project Specs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Project Specs": {
+      "main": [
+        [
+          {
+            "node": "Validate Specs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Specs": {
+      "main": [
+        [
+          {
+            "node": "Has Issues?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Issues?": {
+      "main": [
+        [
+          {
+            "node": "Log Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Validation": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
