@@ -92,6 +92,7 @@ n8n-data/
 # IDE files
 .vscode/
 .idea/
+.trae/
 *.swp
 *.swo
 *~
