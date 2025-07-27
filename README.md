@@ -52,14 +52,18 @@ That's it! The script will:
 - 🚀 [**Quick Start Guide**](docs/QUICKSTART.md) - Get running in 5 minutes
 - 📋 [**Project Setup Guide**](docs/PROJECT_SETUP_GUIDE.md) - Complete setup options and workflows
 - 💡 [**Example: New Project**](docs/EXAMPLE_NEW_PROJECT.md) - Step-by-step walkthrough
+- 🔄 [**Enhanced Workflow Integration**](docs/ENHANCED_WORKFLOW_INTEGRATION.md) - Planning-first workflow system with conversational interface
 - 🧠 [**Memory Management Guide**](docs/MEMORY_MANAGEMENT_GUIDE.md) - Context storage for LLMs
 - 📝 [**Memory Tools Reference**](docs/MEMORY_TOOLS_REFERENCE.md) - Quick reference for memory tools
 - 🔗 [**N8N Integration Guide**](docs/N8N_INTEGRATION_GUIDE.md) - Workflow automation
 
 ## Features
 
+- **Enhanced Workflow System** - Planning-first approach with conversational tool interactions and real-time progress tracking
 - **Project Management** - Create and manage projects with specifications and tasks
-- **Progress Tracking** - Real-time monitoring and intelligent steering recommendations
+- **Progress Tracking** - Real-time monitoring with plain English summaries and intelligent steering recommendations
+- **Task Synchronization** - Bidirectional sync between markdown files and database with automated progress updates
+- **Conversational Interface** - Plain English announcements and formatted output for all MCP tool calls
 - **Memory Management** - Persistent context storage for LLMs with session continuity and knowledge snapshots
 - **MCP Integration** - Works with Cursor, Claude Desktop, Continue.dev, and other MCP-compatible tools
 - **N8N Automation** - Automated workflows for monitoring and notifications
@@ -68,7 +72,8 @@ That's it! The script will:
 ## Documentation
 
 - [QUICKSTART.md](docs/QUICKSTART.md) - Detailed setup guide
-- [Project Agent PRD](docs/project-agent-prd.md) - Complete implementation guide
+- [Project Agent PRD](docs/PROJECT_AGENT_PRD.md) - Complete implementation guide
+- [Enhanced Workflow Integration](docs/ENHANCED_WORKFLOW_INTEGRATION.md) - Planning-first workflow system with conversational interface
 - [Memory Management Guide](docs/MEMORY_MANAGEMENT_GUIDE.md) - Context storage for LLMs
 - [Memory Tools Reference](docs/MEMORY_TOOLS_REFERENCE.md) - Quick reference for memory tools
 - [N8N Setup Guide](docs/N8N_SETUP_GUIDE.md) - Installation and configuration
@@ -84,13 +89,15 @@ npm run test:integration
 ## How It Works
 
 The system provides project context to AI assistants through MCP, enabling them to:
-- Track project specifications and requirements
-- Monitor task progress and suggest next steps
-- Maintain project history and decisions
+- Create planning-first workflows with conversational interfaces
+- Track project specifications and requirements with real-time synchronization
+- Monitor task progress with plain English summaries and automated updates
+- Maintain project history and decisions with checkpoint validation
 - Store session context and retrieve relevant information
 - Create knowledge snapshots for complex projects
 - Query project knowledge with natural language
-- Validate specification consistency
+- Validate specification consistency and phase completion
+- Provide bidirectional sync between markdown files and database
 
 ## Compatible Tools
 
