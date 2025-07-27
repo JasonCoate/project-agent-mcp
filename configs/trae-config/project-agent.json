@@ -4,7 +4,27 @@
       "command": "node",
       "args": [
         "${PROJECT_ROOT}/mcp-server/dist/index.js"
-      ]
+      ],
+      "env": {
+        "DATABASE_PATH": "${PROJECT_ROOT}/mcp-server/data/project-agent.db"
+      }
     }
+  },
+  "agentConfig": {
+    "name": "Project Agent",
+    "description": "Collaborative AI project management, task management, and memory management assistant that provides guidance while seeking user approval before taking actions",
+    "promptFile": "./project-agent-prompt.md",
+    "tools": {
+      "mcp": ["project-agent"],
+      "builtin": ["file_system", "terminal", "web_search", "preview"]
+    },
+    "capabilities": [
+      "Project creation and management",
+      "Specification tracking and validation",
+      "Task management and progress analysis",
+      "Context preservation and memory management",
+      "Feature workflow automation",
+      "Intelligent project guidance"
+    ]
   }
 }
