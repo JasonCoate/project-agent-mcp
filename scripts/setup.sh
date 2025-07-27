@@ -42,5 +42,5 @@ EOF
 fi
 
 echo "Setup complete!"
-echo "Start the MCP server with: npm start"
+echo "Start the MCP server with: cd mcp-server && npm run build && npm start"
 echo "Or use the universal client: npm run test:clients"

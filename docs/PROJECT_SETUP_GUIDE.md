@@ -23,6 +23,7 @@ cd ~/tools/project-agent
 
 # Start the server
 cd ~/tools/project-agent/mcp-server
+npm run build
 npm start  # Keep running in background
 
 # Configure your AI assistants to use:
@@ -42,7 +43,7 @@ npm start  # Keep running in background
 git clone <this-repo> my-new-project
 cd my-new-project
 # Customize .specs/ folder for your project
-cd mcp-server && npm install && npm start
+cd mcp-server && npm install && npm run build && npm start
 ```
 
 ### Option 3: NPM Package (Future)
@@ -90,6 +91,7 @@ This is the most efficient approach for most developers:
 3. **Start the MCP server**:
    ```bash
    cd ~/tools/project-agent/mcp-server
+   npm run build
    npm start  # Keep this running
    ```
 
@@ -294,6 +296,7 @@ AI: 🎉 Great! Let me update your progress.
 ### MCP Server Not Responding
 ```bash
 cd ~/tools/project-agent/mcp-server
+npm run build
 npm start
 # Check logs for errors
 ```
@@ -307,6 +310,7 @@ npm start
 ```bash
 # Reset database (loses all projects!)
 rm ~/tools/project-agent/mcp-server/data/projects.db
+npm run build
 npm start  # Will recreate tables
 ```
 

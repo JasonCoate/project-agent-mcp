@@ -38,7 +38,7 @@ class MCPClient {
   private pendingRequests: Map<number, PendingRequest> = new Map();
 
   async start(): Promise<void> {
-    this.serverProcess = spawn('node', ['./mcp-server/dist/index.js'], {
+    this.serverProcess = spawn('node', ['./mcp-server/dist/src/index.js'], {
       stdio: ['pipe', 'pipe', 'pipe'],
     });
 

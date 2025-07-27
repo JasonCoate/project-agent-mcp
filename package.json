@@ -4,7 +4,7 @@
   "description": "AI Project Management Agent with MCP and N8N",
   "scripts": {
     "setup": "./scripts/setup.sh",
-    "start": "./scripts/start.sh", 
+    "start": "./scripts/start.sh",
     "dev": "./scripts/dev.sh",
     "build": "tsc && cd mcp-server && npm run build",
     "build:clients": "tsc",
@@ -13,14 +13,19 @@
     "test:integration": "npm run build:clients && node dist/clients/n8n-integration-demo.js",
     "deploy": "docker-compose up -d"
   },
-  "keywords": ["mcp", "n8n", "project-management", "ai"],
+  "keywords": [
+    "mcp",
+    "n8n",
+    "project-management",
+    "ai"
+  ],
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "typescript": "^5.3.0",
-    "@types/node": "^20.10.0",
-    "ts-node": "^10.9.0"
+    "@types/node": "^20.19.9",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.3.0"
   }
 }

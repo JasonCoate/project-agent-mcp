@@ -25,6 +25,7 @@ cd ~/tools/project-agent
 
 ```bash
 cd ~/tools/project-agent/mcp-server
+npm run build
 npm start  # Keep running in background
 ```
 
@@ -60,7 +61,8 @@ cp .env.example .env
 npm install
 cd mcp-server && npm install
 
-# Start MCP server
+# Build and start MCP server
+npm run build
 npm start
 ```
 

@@ -20,6 +20,7 @@ A self-hosted project management system that integrates with AI assistants throu
 2. **Start the MCP server**:
    ```bash
    cd ~/tools/project-agent/mcp-server
+   npm run build
    npm start  # Keep running in background
    ```
 
@@ -39,6 +40,7 @@ A self-hosted project management system that integrates with AI assistants throu
 git clone <this-repo> ~/tools/project-agent
 cd ~/tools/project-agent/mcp-server
 npm install
+npm run build
 npm start  # Keep running in background
 ```
 
@@ -135,7 +137,7 @@ The system provides project context to AI assistants through MCP, enabling them 
 
 ```bash
 # Start MCP server
-cd mcp-server && npm start
+cd mcp-server && npm run build && npm start
 
 # Test with Universal CLI (new terminal)
 npm run test:clients

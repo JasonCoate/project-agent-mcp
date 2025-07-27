@@ -41,7 +41,7 @@ class MCPClient {
     messageId = 0;
     pendingRequests = new Map();
     async start() {
-        this.serverProcess = (0, child_process_1.spawn)('node', ['./mcp-server/dist/index.js'], {
+        this.serverProcess = (0, child_process_1.spawn)('node', ['./mcp-server/dist/src/index.js'], {
             stdio: ['pipe', 'pipe', 'pipe'],
         });
         this.serverProcess.stdout?.on('data', (data) => {

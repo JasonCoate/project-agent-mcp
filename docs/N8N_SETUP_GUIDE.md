@@ -13,7 +13,7 @@
 
 ### Prerequisites
 - **Node.js >=20.19**: N8N requires Node.js version 20.19 or higher (up to 24.x)
-- MCP server running (from your project's `/mcp-server` directory: `npm start`)
+- MCP server running (from your project's `/mcp-server` directory: `npm run build && npm start`)
 - N8N installed locally or via Docker
 - Internet connection for installing community nodes
 
@@ -464,6 +464,7 @@ npm install n8n-nodes-sqlite3
    
    # Restart MCP server if needed
    cd ${PROJECT_ROOT}/mcp-server
+   npm run build
    npm start
    ```
    
@@ -567,6 +568,7 @@ npm install n8n-nodes-sqlite3
    
    # Start MCP server
    cd ${PROJECT_ROOT}/mcp-server
+   npm run build
    npm start
    
    # Start N8N (in new terminal)
