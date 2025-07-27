@@ -56,7 +56,7 @@ class N8NMCPIntegration {
   async startMCPServer(): Promise<void> {
     console.log('🚀 Starting MCP Server for N8N Integration...');
     
-    this.serverProcess = spawn('node', ['./mcp-server/dist/index.js'], {
+    this.serverProcess = spawn('node', ['./mcp-server/dist/src/index.js'], {
       stdio: ['pipe', 'pipe', 'pipe'],
     });
 
