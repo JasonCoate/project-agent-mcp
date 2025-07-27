@@ -2,10 +2,10 @@
   "name": "project-agent-mcp",
   "version": "1.0.0",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "dev": "tsx src/index.ts",
     "test": "npm run build && node dist/test-mcp.js",
     "test:create": "npm run build && node dist/test-create-project.js",

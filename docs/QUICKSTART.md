@@ -10,34 +10,53 @@ Get Project Agent running in 5 minutes.
 
 ## Installation
 
-### 1. Clone and Setup
+### Manual Setup
+**Best for most users:** One installation, use for all projects
+
+**Install Project Agent:**
 
 ```bash
-git clone https://github.com/JasonCoate/project-agent-mcp.git
-cd project-agent
+git clone <this-repo> ~/tools/project-agent
+cd ~/tools/project-agent/mcp-server
+npm install
+npm start  # Keep running in background
 ```
 
-### 2. Configure Environment (Optional)
+Configure your AI assistant to use `~/tools/project-agent/mcp-server`
+
+See [Quick Start Guide](docs/QUICKSTART.md) for detailed setup
+
+**Create projects anywhere:**
 
 ```bash
+mkdir my-awesome-app && cd my-awesome-app
+# Then in your AI assistant:
+"Create a new project called 'my-awesome-app' for a React web application"
+```
+
+The agent automatically creates:
+- `.specs/<project-name>/` folder with sequentially numbered feature-based subdirectories
+- Directory format: `1-feat-create-app-footer`, `2-fix-login-bug`, `3-docs-update-readme`, `4-refactor-auth-module`, etc.
+- Uses standard conventional commit prefixes: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- Organized specifications by workflow type and feature name within each project
+- Task lists and workflow phases within each numbered feature directory
+- Progress tracking and checkpoints for individual features
+
+### Alternative: Local Setup
+
+```bash
+git clone <this-repo>
+cd project-agent
+
+# Configure environment (optional)
 cp .env.example .env
 # Edit .env and set PROJECT_ROOT to your project path if needed
-```
 
-### 3. Install Dependencies
-
-```bash
-# Install root dependencies
+# Install dependencies
 npm install
-
-# Install MCP server dependencies
 cd mcp-server && npm install
-```
 
-### 4. Start MCP Server
-
-```bash
-# From mcp-server directory
+# Start MCP server
 npm start
 ```
 
@@ -127,6 +146,20 @@ n8n start
 }
 ```
 
+### Trae IDE
+
+1. Add to your Trae configuration:
+```json
+{
+  "mcpServers": {
+    "project-agent": {
+      "command": "node",
+      "args": ["/path/to/project-agent/mcp-server/dist/index.js"]
+    }
+  }
+}
+```
+
 ### Universal CLI Client
 
 ```bash
@@ -137,6 +170,36 @@ npm run test:clients
 > help
 ```
 
+## Available MCP Tools
+
+### Project Management
+- `create_project`: Initialize new project
+- `get_project`: Retrieve project details
+- `update_project`: Modify project info
+- `list_projects`: Show all projects
+- `get_project_context`: Get comprehensive project context
+- `add_context_note`: Add contextual notes
+- `search_context`: Search project context
+
+### Feature-Based Workflow Management
+- `create_feature_directory`: Create feature directory structure
+- `create_feature_workflow`: Create a new feature workflow
+- `update_feature_task`: Update tasks within a specific feature
+- `get_feature_progress`: Get progress summary for a feature
+- `list_project_features`: List all features with progress
+- `create_feature_checkpoint`: Create checkpoint for completed feature
+
+### Specification Management
+- `create_spec`: Add new specification
+- `get_specs`: Retrieve project specs
+- `update_spec`: Modify specifications
+- `validate_specs`: Check consistency
+
+### Task Tracking
+- `create_task`: Add new task
+- `get_tasks`: List project tasks
+- `analyze_progress`: Generate reports
+
 ## Verification
 
 Verify everything is working:
@@ -146,6 +209,8 @@ Verify everything is working:
 - [ ] Database contains sample project data
 - [ ] Demo script runs without errors
 - [ ] AI assistant can access project tools
+- [ ] Feature-based tools create proper directory structures
+- [ ] Feature workflows and checkpoints work correctly
 
 ## Troubleshooting
 

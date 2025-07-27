@@ -28,7 +28,7 @@ interface MCPResponse {
 function testMCPServer(): void {
   console.log('Testing MCP Server...');
   
-  const server: ChildProcess = spawn('node', ['dist/index.js'], {
+  const server: ChildProcess = spawn('node', ['dist/src/index.js'], {
     stdio: ['pipe', 'pipe', 'pipe']
   });
 
