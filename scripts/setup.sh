@@ -29,7 +29,7 @@ After=network.target
 Type=simple
 User=$USER
 WorkingDirectory=$(pwd)
-ExecStart=/usr/bin/node mcp-server/dist/index.js
+ExecStart=/usr/bin/node mcp-server/dist/src/index.js
 Restart=always
 RestartSec=10
 

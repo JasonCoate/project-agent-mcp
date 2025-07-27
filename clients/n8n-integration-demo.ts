@@ -55,7 +55,7 @@ class N8NMCPIntegration {
 
   async startMCPServer(): Promise<void> {
     console.log('🚀 Starting MCP Server for N8N Integration...');
-    
+
     this.serverProcess = spawn('node', ['./mcp-server/dist/src/index.js'], {
       stdio: ['pipe', 'pipe', 'pipe'],
     });
@@ -73,7 +73,10 @@ class N8NMCPIntegration {
     console.log('✅ MCP Server started successfully');
   }
 
-  private async sendMCPRequest(method: string, params: Record<string, any> = {}): Promise<any> {
+  private async sendMCPRequest(
+    method: string,
+    params: Record<string, any> = {}
+  ): Promise<any> {
     const id = ++this.messageId;
     const request: MCPRequest = {
       jsonrpc: '2.0',
@@ -85,7 +88,7 @@ class N8NMCPIntegration {
     return new Promise((resolve, reject) => {
       this.pendingRequests.set(id, { resolve, reject });
       this.serverProcess?.stdin?.write(JSON.stringify(request) + '\n');
-      
+
       // Timeout after 5 seconds
       setTimeout(() => {
         if (this.pendingRequests.has(id)) {
@@ -114,7 +117,10 @@ class N8NMCPIntegration {
     }
   }
 
-  async executeMCPTool(toolName: string, args: Record<string, any>): Promise<any> {
+  async executeMCPTool(
+    toolName: string,
+    args: Record<string, any>
+  ): Promise<any> {
     try {
       const result = await this.sendMCPRequest('tools/call', {
         name: toolName,
@@ -122,7 +128,10 @@ class N8NMCPIntegration {
       });
       return result;
     } catch (error) {
-      console.error(`Error executing MCP tool ${toolName}:`, (error as Error).message);
+      console.error(
+        `Error executing MCP tool ${toolName}:`,
+        (error as Error).message
+      );
       throw error;
     }
   }
@@ -130,7 +139,7 @@ class N8NMCPIntegration {
   // Simulates an N8N Project Monitor Workflow
   async simulateN8NProjectMonitorWorkflow(): Promise<void> {
     console.log('\n📊 N8N Project Monitor Workflow Started');
-    console.log('=' .repeat(50));
+    console.log('='.repeat(50));
 
     try {
       // Step 1: List all projects
@@ -144,35 +153,56 @@ class N8NMCPIntegration {
       for (const project of projects) {
         if (project.status === 'active') {
           console.log(`\n   📋 Project: ${project.name} (${project.id})`);
-          
+
           try {
-            const progressResult = await this.executeMCPTool('analyze_progress', {
-              project_id: project.id,
-            });
-            
-            console.log(`   📈 Progress: ${progressResult.overall_progress || 0}%`);
-            console.log(`   📝 Tasks: ${progressResult.total_tasks || 0} total, ${progressResult.completed_tasks || 0} completed`);
-            
+            const progressResult = await this.executeMCPTool(
+              'analyze_progress',
+              {
+                project_id: project.id,
+              }
+            );
+
+            console.log(
+              `   📈 Progress: ${progressResult.overall_progress || 0}%`
+            );
+            console.log(
+              `   📝 Tasks: ${progressResult.total_tasks || 0} total, ${progressResult.completed_tasks || 0} completed`
+            );
+
             // Step 3: Log alerts for projects with issues
             if (progressResult.overall_progress < 30) {
               console.log(`   ⚠️  ALERT: Low progress detected!`);
-              await this.logAlert(project.id, 'Low Progress', `Project ${project.name} has only ${progressResult.overall_progress}% progress`);
+              await this.logAlert(
+                project.id,
+                'Low Progress',
+                `Project ${project.name} has only ${progressResult.overall_progress}% progress`
+              );
             }
-            
+
             if (progressResult.blocked_tasks > 0) {
-              console.log(`   🚫 ALERT: ${progressResult.blocked_tasks} blocked tasks!`);
-              await this.logAlert(project.id, 'Blocked Tasks', `Project ${project.name} has ${progressResult.blocked_tasks} blocked tasks`);
+              console.log(
+                `   🚫 ALERT: ${progressResult.blocked_tasks} blocked tasks!`
+              );
+              await this.logAlert(
+                project.id,
+                'Blocked Tasks',
+                `Project ${project.name} has ${progressResult.blocked_tasks} blocked tasks`
+              );
             }
           } catch (error) {
-            console.log(`   ❌ Error analyzing project: ${(error as Error).message}`);
+            console.log(
+              `   ❌ Error analyzing project: ${(error as Error).message}`
+            );
           }
         }
       }
 
       // Step 4: Send summary notification
       console.log('\n4️⃣ Sending summary notification...');
-      await this.sendNotification('Project Monitor Summary', `Analyzed ${projects.length} projects. Check logs for details.`);
-      
+      await this.sendNotification(
+        'Project Monitor Summary',
+        `Analyzed ${projects.length} projects. Check logs for details.`
+      );
     } catch (error) {
       console.error('❌ Workflow failed:', (error as Error).message);
     }
@@ -181,9 +211,11 @@ class N8NMCPIntegration {
   }
 
   // Simulates an N8N Progress Tracker Webhook
-  async simulateN8NProgressTrackerWebhook(projectId: string): Promise<ProgressMetrics> {
+  async simulateN8NProgressTrackerWebhook(
+    projectId: string
+  ): Promise<ProgressMetrics> {
     console.log('\n🎯 N8N Progress Tracker Webhook Triggered');
-    console.log('=' .repeat(50));
+    console.log('='.repeat(50));
     console.log(`📋 Project ID: ${projectId}`);
 
     try {
@@ -191,18 +223,22 @@ class N8NMCPIntegration {
       const tasksResult = await this.executeMCPTool('get_tasks', {
         project_id: projectId,
       });
-      
+
       const tasks: Task[] = tasksResult.tasks || [];
-      
+
       // Calculate metrics
       const metrics: ProgressMetrics = {
         totalTasks: tasks.length,
         completedTasks: tasks.filter(t => t.status === 'done').length,
         inProgressTasks: tasks.filter(t => t.status === 'in-progress').length,
         blockedTasks: tasks.filter(t => t.status === 'blocked').length,
-        overallProgress: tasks.length > 0 
-          ? Math.round((tasks.filter(t => t.status === 'done').length / tasks.length) * 100)
-          : 0
+        overallProgress:
+          tasks.length > 0
+            ? Math.round(
+                (tasks.filter(t => t.status === 'done').length / tasks.length) *
+                  100
+              )
+            : 0,
       };
 
       console.log('\n📊 Progress Metrics:');
@@ -216,23 +252,26 @@ class N8NMCPIntegration {
       await this.executeMCPTool('add_context_note', {
         project_id: projectId,
         content: `Progress webhook triggered. Metrics: ${metrics.overallProgress}% complete, ${metrics.blockedTasks} blocked tasks`,
-        event_type: 'milestone'
+        event_type: 'milestone',
       });
 
       return metrics;
-      
     } catch (error) {
       console.error('❌ Webhook processing failed:', (error as Error).message);
       throw error;
     }
   }
 
-  private async logAlert(projectId: string, alertType: string, message: string): Promise<void> {
+  private async logAlert(
+    projectId: string,
+    alertType: string,
+    message: string
+  ): Promise<void> {
     try {
       await this.executeMCPTool('add_context_note', {
         project_id: projectId,
         content: `ALERT [${alertType}]: ${message}`,
-        event_type: 'issue'
+        event_type: 'issue',
       });
       console.log(`   📝 Alert logged: ${alertType}`);
     } catch (error) {
@@ -240,7 +279,10 @@ class N8NMCPIntegration {
     }
   }
 
-  private async sendNotification(title: string, message: string): Promise<void> {
+  private async sendNotification(
+    title: string,
+    message: string
+  ): Promise<void> {
     // In a real N8N workflow, this would send to Slack, email, etc.
     console.log(`   📧 NOTIFICATION: ${title}`);
     console.log(`   📄 Message: ${message}`);
@@ -257,20 +299,20 @@ class N8NMCPIntegration {
 // Demo execution
 async function runDemo(): Promise<void> {
   const integration = new N8NMCPIntegration();
-  
+
   try {
     await integration.startMCPServer();
-    
+
     // Run the project monitor workflow
     await integration.simulateN8NProjectMonitorWorkflow();
-    
+
     // Simulate a webhook for a specific project
     console.log('\n' + '='.repeat(60));
-    const metrics = await integration.simulateN8NProgressTrackerWebhook('sample-project-id');
-    
+    const metrics =
+      await integration.simulateN8NProgressTrackerWebhook('sample-project-id');
+
     console.log('\n🎉 Demo completed successfully!');
     console.log(`Final metrics: ${metrics.overallProgress}% complete`);
-    
   } catch (error) {
     console.error('❌ Demo failed:', (error as Error).message);
   } finally {

@@ -27,16 +27,17 @@ interface MCPResponse {
 
 function testMCPServer(): void {
   console.log('Testing MCP Server...');
-  
+
   const server: ChildProcess = spawn('node', ['dist/src/index.js'], {
-    stdio: ['pipe', 'pipe', 'pipe']
+    stdio: ['pipe', 'pipe', 'pipe'],
+    cwd: '../../mcp-server',
   });
 
   // Test list tools request
   const listToolsRequest: MCPRequest = {
     jsonrpc: '2.0',
     id: 1,
-    method: 'tools/list'
+    method: 'tools/list',
   };
 
   server.stdin?.write(JSON.stringify(listToolsRequest) + '\n');
@@ -45,9 +46,11 @@ function testMCPServer(): void {
     try {
       const response: MCPResponse = JSON.parse(data.toString());
       console.log('Server Response:', JSON.stringify(response, null, 2));
-      
+
       if (response.result && response.result.tools) {
-        console.log(`\n✅ Success! Found ${response.result.tools.length} tools:`);
+        console.log(
+          `\n✅ Success! Found ${response.result.tools.length} tools:`
+        );
         response.result.tools.forEach(tool => {
           console.log(`  - ${tool.name}: ${tool.description}`);
         });

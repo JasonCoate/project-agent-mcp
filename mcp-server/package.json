@@ -7,11 +7,12 @@
     "build": "tsc",
     "start": "node dist/src/index.js",
     "dev": "tsx src/index.ts",
-    "test": "npm run build && node dist/test-mcp.js",
-    "test:create": "npm run build && node dist/test-create-project.js",
-    "test:comprehensive": "npm run build && node dist/test-comprehensive.js",
-    "test:integration": "npm run build && node dist/test-integration.js",
-    "test:all": "npm run test && npm run test:comprehensive && npm run test:integration"
+    "test": "npm run build && cd ../tests/integration && npx ts-node test-mcp.ts",
+    "test:create": "npm run build && cd ../tests/integration && npx ts-node test-create-project.ts",
+    "test:comprehensive": "npm run build && cd ../tests/integration && npx ts-node test-comprehensive.ts",
+    "test:integration": "npm run build && cd ../tests/integration && npx ts-node test-integration.ts",
+    "test:mcp-tools": "npm run build && cd ../tests/mcp-tools && node test-all-tools-comprehensive.js",
+    "test:all": "npm run test && npm run test:comprehensive && npm run test:integration && npm run test:mcp-tools"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
@@ -28,6 +29,7 @@
     "@types/express": "^4.17.0",
     "@types/cors": "^2.8.0",
     "@types/uuid": "^9.0.0",
+    "@types/semver": "^7.5.0",
     "typescript": "^5.0.0",
     "tsx": "^4.0.0"
   }

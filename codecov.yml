@@ -1,0 +1,67 @@
+# Codecov configuration
+# https://docs.codecov.io/docs/codecov-yaml
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  
+  status:
+    project:
+      default:
+        target: 70%
+        threshold: 1%
+        base: auto
+        branches:
+          - main
+          - master
+    patch:
+      default:
+        target: 70%
+        threshold: 1%
+        base: auto
+        
+comment:
+  layout: "reach,diff,flags,tree,reach"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes
+  
+ignore:
+  - "tests/"
+  - "coverage/"
+  - "dist/"
+  - "node_modules/"
+  - "*.test.ts"
+  - "*.spec.ts"
+  - "jest.config.js"
+  - ".eslintrc.js"
+  - "*.d.ts"
+  
+fixes:
+  - "before/path/::after/path/"
+  
+flags:
+  unit:
+    paths:
+      - mcp-server/src/
+    carryforward: true
+  integration:
+    paths:
+      - tests/integration/
+    carryforward: true
+  tools:
+    paths:
+      - tools/
+    carryforward: true
+    
+notifications:
+  slack:
+    default:
+      url: "secret:slack_webhook"
+      threshold: 1%
+      message: |
+        Coverage for {{owner}}/{{repo}} changed by {{change}}%
+        {{#if coverage}}Current coverage: {{coverage}}%{{/if}}
+        {{url}}

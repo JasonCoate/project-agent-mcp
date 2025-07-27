@@ -7,6 +7,7 @@ The Project Agent MCP Server provides sophisticated memory management capabiliti
 ## Why Memory Management Matters
 
 ### The Problem
+
 - **Context Loss**: LLMs lose context between sessions
 - **Thinking Limits**: Some models hit "thinking limit reached" errors
 - **Repeated Analysis**: Same problems get re-analyzed multiple times
@@ -14,7 +15,9 @@ The Project Agent MCP Server provides sophisticated memory management capabiliti
 - **Knowledge Fragmentation**: Project understanding becomes scattered
 
 ### The Solution
+
 The Project Agent MCP Server provides:
+
 - **Persistent Memory**: Store context in SQLite database
 - **Structured Knowledge**: Organize information by type and relevance
 - **Smart Retrieval**: Find relevant context automatically
@@ -30,6 +33,7 @@ The Project Agent MCP Server provides:
 **Purpose**: Store the results of analysis, decisions, and insights from the current session.
 
 **When to Use**:
+
 - After completing a complex analysis
 - When making architectural decisions
 - After debugging sessions
@@ -37,6 +41,7 @@ The Project Agent MCP Server provides:
 - During code reviews
 
 **Example Usage**:
+
 ```json
 {
   "project_id": "my-web-app",
@@ -77,6 +82,7 @@ The Project Agent MCP Server provides:
 **Purpose**: Get relevant context and memory for the current task.
 
 **When to Use**:
+
 - At the start of new sessions
 - When working on related features
 - Before making architectural decisions
@@ -84,6 +90,7 @@ The Project Agent MCP Server provides:
 - During code reviews
 
 **Example Usage**:
+
 ```json
 {
   "project_id": "my-web-app",
@@ -96,6 +103,7 @@ The Project Agent MCP Server provides:
 ```
 
 **Response Example**:
+
 ```json
 {
   "current_task": "Implement password reset functionality",
@@ -130,6 +138,7 @@ The Project Agent MCP Server provides:
 **Purpose**: Create comprehensive snapshots of project understanding.
 
 **When to Use**:
+
 - After major architectural decisions
 - At project milestones
 - When onboarding new team members
@@ -137,6 +146,7 @@ The Project Agent MCP Server provides:
 - During project handoffs
 
 **Example Usage**:
+
 ```json
 {
   "project_id": "my-web-app",
@@ -180,6 +190,7 @@ The Project Agent MCP Server provides:
 **Purpose**: Search project knowledge with natural language queries.
 
 **When to Use**:
+
 - Looking for specific implementation details
 - Finding previous decisions on similar issues
 - Understanding why certain approaches were chosen
@@ -187,6 +198,7 @@ The Project Agent MCP Server provides:
 - Researching project patterns
 
 **Example Usage**:
+
 ```json
 {
   "project_id": "my-web-app",
@@ -203,6 +215,7 @@ The Project Agent MCP Server provides:
 While this system was initially designed for LLMs without thinking capabilities, it provides significant value for thinking-capable models by enabling deeper analysis and more sophisticated reasoning:
 
 #### Enhanced Decision Quality
+
 - **Historical Context Integration**: Thinking models can analyze retrieved context alongside current observations to make more informed decisions
 - **Pattern Recognition**: Access to historical decisions enables identification of successful patterns and anti-patterns
 - **Compound Intelligence**: Combine current reasoning with accumulated project wisdom
@@ -210,6 +223,7 @@ While this system was initially designed for LLMs without thinking capabilities,
 #### Advanced Use Cases
 
 1. **Strategic Architecture Evolution**:
+
    ```
    1. Query historical architectural decisions
    2. Analyze evolution patterns and outcomes
@@ -218,6 +232,7 @@ While this system was initially designed for LLMs without thinking capabilities,
    ```
 
 2. **Cross-Project Pattern Recognition**:
+
    ```
    1. Retrieve similar implementations across projects
    2. Analyze what worked and what didn't
@@ -234,6 +249,7 @@ While this system was initially designed for LLMs without thinking capabilities,
    ```
 
 #### Benefits for Thinking Models
+
 - **Deeper Analysis**: More context enables more sophisticated reasoning
 - **Better Synthesis**: Combine current thinking with historical insights
 - **Informed Speculation**: Make educated guesses based on project history
@@ -243,6 +259,7 @@ While this system was initially designed for LLMs without thinking capabilities,
 ### For LLMs Without Thinking
 
 1. **Session Start Protocol**:
+
    ```
    1. Call retrieve_relevant_context with current task
    2. Review returned context before proceeding
@@ -250,6 +267,7 @@ While this system was initially designed for LLMs without thinking capabilities,
    ```
 
 2. **Session End Protocol**:
+
    ```
    1. Summarize key insights and decisions
    2. Call store_session_context with results
@@ -271,17 +289,18 @@ While this system was initially designed for LLMs without thinking capabilities,
    - Document current challenges and constraints
 
 2. **Feature Development Workflow**:
+
    ```
    Planning Phase:
    - Query knowledge for similar features
    - Review architectural constraints
    - Store planning decisions
-   
+
    Implementation Phase:
    - Retrieve relevant context
    - Store code changes and insights
    - Document implementation decisions
-   
+
    Review Phase:
    - Query for related implementations
    - Store review findings
@@ -303,24 +322,28 @@ While this system was initially designed for LLMs without thinking capabilities,
 ## Best Practices
 
 ### Context Storage
+
 - **Be Specific**: Include concrete details, not just high-level summaries
 - **Include Reasoning**: Always explain why decisions were made
 - **Document Alternatives**: Record what options were considered
 - **Add Metadata**: Use metadata for additional context
 
 ### Context Retrieval
+
 - **Start Every Session**: Always retrieve context before starting work
 - **Be Specific**: Use detailed task descriptions for better matching
 - **Review Results**: Actually read and consider the retrieved context
 - **Update Understanding**: Modify approach based on retrieved information
 
 ### Knowledge Management
+
 - **Regular Snapshots**: Create snapshots at logical breakpoints
 - **Update Constraints**: Keep technical constraints current
 - **Track Patterns**: Document recurring design patterns
 - **Monitor Challenges**: Keep current challenges list updated
 
 ### Query Optimization
+
 - **Use Natural Language**: Write queries as you would ask a colleague
 - **Be Specific**: Include relevant technical terms
 - **Filter by Type**: Use knowledge_types to focus results
@@ -450,21 +473,25 @@ While this system was initially designed for LLMs without thinking capabilities,
 ## Integration with AI Assistants
 
 ### Cursor AI
+
 - Use memory tools in `.cursorrules` workflows
 - Integrate with existing project context
 - Store architectural decisions automatically
 
 ### Claude Desktop
+
 - Call memory tools through MCP interface
 - Maintain conversation context across sessions
 - Store analysis results for reuse
 
 ### Trae IDE
+
 - Integrate memory calls into development workflow
 - Store code review insights
 - Maintain project understanding
 
 ### Universal CLI Client
+
 - Script memory management workflows
 - Automate context storage and retrieval
 - Integrate with CI/CD pipelines

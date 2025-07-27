@@ -41,7 +41,7 @@ The agent requires the Project Agent MCP server. Configure it with:
   "mcpServers": {
     "project-agent": {
       "command": "node",
-      "args": ["${PROJECT_ROOT}/mcp-server/dist/index.js"],
+      "args": ["${PROJECT_ROOT}/mcp-server/dist/src/index.js"],
       "env": {
         "DATABASE_PATH": "${PROJECT_ROOT}/mcp-server/data/project-agent.db"
       }
@@ -61,6 +61,7 @@ List all available projects and create a new test project
 ```
 
 The agent should:
+
 1. Use the `list_projects` MCP tool
 2. Create a new project with `create_project`
 3. Show you the project details
@@ -70,30 +71,35 @@ The agent should:
 Once configured, your Project Agent will collaborate with you as a patient assistant that:
 
 ### 🤝 Collaborative Project Management
+
 - **Suggest** project creation and management approaches
 - **Recommend** project status tracking and progress monitoring
 - **Propose** comprehensive project reports (with your approval)
 - **Maintain** project context across sessions (with permission)
 
 ### 📋 Guided Specification Management
+
 - **Suggest** creating requirement, technical, design, and acceptance specs
 - **Recommend** specification consistency validation
 - **Propose** linking specs to tasks and implementation
 - **Guide** specification evolution through collaborative planning
 
 ### ✅ Consultative Task Management
+
 - **Suggest** creating tasks linked to specifications
 - **Recommend** progress tracking and bottleneck identification
 - **Propose** task assignment and priority management
 - **Guide** task analysis through collaborative review
 
 ### 🧠 Patient Memory & Context Management
+
 - **Ask permission** before storing session context and decisions
 - **Suggest** retrieving relevant context for current work
 - **Propose** creating knowledge snapshots at appropriate times
 - **Offer** to search project history with natural language
 
 ### 🔄 Collaborative Feature Workflows
+
 - **Suggest** structured feature development workflows
 - **Recommend** tracking feature progress through phases
 - **Propose** managing feature-specific tasks
@@ -102,21 +108,25 @@ Once configured, your Project Agent will collaborate with you as a patient assis
 ## Usage Examples
 
 ### Starting a New Project
+
 ```
 I want to create a new React e-commerce application. Can you help me plan the project structure with proper specifications and initial tasks? Please explain your approach first.
 ```
 
 ### Adding a Feature
+
 ```
 I need to add user authentication to my project. Can you suggest a feature workflow approach with specifications and tasks? Please outline your plan before proceeding.
 ```
 
 ### Reviewing Progress
+
 ```
 Can you help me analyze the current project progress? Please explain what you'd like to check and get my approval before proceeding.
 ```
 
 ### Getting Context
+
 ```
 I'd like to understand the decisions made about database architecture in this project. Can you search the project history for this information?
 ```
@@ -135,16 +145,19 @@ I'd like to understand the decisions made about database architecture in this pr
 ## Troubleshooting
 
 ### Agent Not Responding
+
 - Check that the MCP server is running
 - Verify the database path is correct
 - Ensure Node.js version is 22.5.0+
 
 ### MCP Tools Not Available
+
 - Verify the `project-agent` MCP server is configured
 - Check the server path in the configuration
 - Rebuild the MCP server if needed
 
 ### Database Issues
+
 - Check database file permissions
 - Verify the database path exists
 - Try recreating the database with `npm run reset-db`
@@ -152,6 +165,7 @@ I'd like to understand the decisions made about database architecture in this pr
 ## Support
 
 For more information:
+
 - [Project Agent Documentation](../../docs/)
 - [MCP Server README](../../mcp-server/README.md)
 - [Project Setup Guide](../../docs/PROJECT_SETUP_GUIDE.md)

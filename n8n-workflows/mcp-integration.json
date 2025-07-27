@@ -15,10 +15,7 @@
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1,
-      "position": [
-        240,
-        300
-      ]
+      "position": [240, 300]
     },
     {
       "parameters": {
@@ -28,10 +25,7 @@
       "name": "Get Projects via MCP",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [
-        460,
-        300
-      ]
+      "position": [460, 300]
     },
     {
       "parameters": {
@@ -40,10 +34,7 @@
       "name": "Process Projects",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        680,
-        300
-      ]
+      "position": [680, 300]
     },
     {
       "parameters": {
@@ -53,10 +44,7 @@
       "name": "Analyze Project Progress",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [
-        900,
-        300
-      ]
+      "position": [900, 300]
     },
     {
       "parameters": {
@@ -65,10 +53,7 @@
       "name": "Evaluate Analysis",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1120,
-        300
-      ]
+      "position": [1120, 300]
     },
     {
       "parameters": {
@@ -84,10 +69,7 @@
       "name": "Needs Attention?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [
-        1340,
-        300
-      ]
+      "position": [1340, 300]
     },
     {
       "parameters": {
@@ -97,10 +79,7 @@
       "name": "Log Alert via MCP",
       "type": "n8n-nodes-base.executeCommand",
       "typeVersion": 1,
-      "position": [
-        1560,
-        200
-      ]
+      "position": [1560, 200]
     },
     {
       "parameters": {
@@ -109,10 +88,7 @@
       "name": "Send Notification",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        1780,
-        200
-      ]
+      "position": [1780, 200]
     }
   ],
   "connections": {

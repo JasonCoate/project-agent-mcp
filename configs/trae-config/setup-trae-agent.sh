@@ -12,7 +12,7 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 echo "📁 Project root: $PROJECT_ROOT"
 
 # Check if MCP server is built
-if [ ! -f "$PROJECT_ROOT/mcp-server/dist/index.js" ]; then
+if [ ! -f "$PROJECT_ROOT/mcp-server/dist/src/index.js" ]; then
     echo "⚠️  MCP server not built. Building now..."
     cd "$PROJECT_ROOT/mcp-server"
     npm install
@@ -55,7 +55,7 @@ echo "   - Or copy the prompt from: $PROJECT_ROOT/configs/trae-config/project-ag
 echo ""
 echo "🔧 MCP Server Details:"
 echo "   - Command: node"
-echo "   - Args: $PROJECT_ROOT/mcp-server/dist/index.js"
+echo "   - Args: $PROJECT_ROOT/mcp-server/dist/src/index.js"
 echo "   - Database: $PROJECT_ROOT/mcp-server/data/project-agent.db"
 echo ""
 echo "🧪 Test the setup by asking the agent:"

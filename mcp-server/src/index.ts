@@ -1,12 +1,12 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { 
+import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
   CallToolRequest,
   ListToolsRequest,
   CallToolResult,
-  ListToolsResult
+  ListToolsResult,
 } from '@modelcontextprotocol/sdk/types.js';
 
 import { DatabaseManager } from './database.js';
@@ -32,12 +32,10 @@ class ProjectAgentServer {
   private featureWorkflowManager: FeatureWorkflowManager;
 
   constructor() {
-    this.server = new Server(
-      {
-        name: "project-agent-mcp",
-        version: "1.0.0"
-      }
-    );
+    this.server = new Server({
+      name: 'project-agent-mcp',
+      version: '1.0.0',
+    });
 
     this.db = new DatabaseManager();
     this.tools = {
@@ -45,13 +43,19 @@ class ProjectAgentServer {
       spec: new SpecManagerTool(this.db),
       task: new TaskManagerTool(this.db),
       context: new ContextManagerTool(this.db),
-      memory: new MemoryAssistantTool(this.db)
+      memory: new MemoryAssistantTool(this.db),
     };
-    
+
     // Initialize feature workflow tools
-    this.featureWorkflowManager = new FeatureWorkflowManager(this.db, process.cwd());
-    this.featureWorkflowTools = createFeatureWorkflowTools(this.db, process.cwd());
-    
+    this.featureWorkflowManager = new FeatureWorkflowManager(
+      this.db,
+      process.cwd()
+    );
+    this.featureWorkflowTools = createFeatureWorkflowTools(
+      this.db,
+      process.cwd()
+    );
+
     // Initialize workflow database tables
     this.initializeWorkflowDatabase();
 
@@ -67,71 +71,103 @@ class ProjectAgentServer {
   }
 
   private setupHandlers() {
-    this.server.setRequestHandler(ListToolsRequestSchema, async (request: ListToolsRequest): Promise<ListToolsResult> => {
-      const allTools = [
-        ...this.tools.project.getTools(),
-        ...this.tools.spec.getTools(),
-        ...this.tools.task.getTools(),
-        ...this.tools.context.getTools(),
-        ...this.tools.memory.getTools(),
-        ...this.featureWorkflowTools.getTools()
-      ];
+    this.server.setRequestHandler(
+      ListToolsRequestSchema,
+      async (_request: ListToolsRequest): Promise<ListToolsResult> => {
+        const allTools = [
+          ...this.tools.project.getTools(),
+          ...this.tools.spec.getTools(),
+          ...this.tools.task.getTools(),
+          ...this.tools.context.getTools(),
+          ...this.tools.memory.getTools(),
+          ...this.featureWorkflowTools.getTools(),
+        ];
 
-      return { tools: allTools };
-    });
-
-    this.server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest): Promise<CallToolResult> => {
-      const { name, arguments: args } = request.params;
-
-      try {
-        let result;
-
-        // Route to appropriate tool handler
-        if (name === 'create_project' || name === 'get_project' || 
-            name === 'update_project' || name === 'list_projects') {
-          result = await this.tools.project.handleTool(name, args);
-        } else if (name.includes('feature_workflow') || name.includes('workflow')) {
-          // Handle feature workflow tools
-          result = await this.featureWorkflowTools.handleTool(name, args);
-        } else if (name.includes('spec')) {
-          result = await this.tools.spec.handleTool(name, args);
-        } else if (name.includes('task') || name.includes('progress')) {
-          result = await this.tools.task.handleTool(name, args);
-        } else if (name.includes('context') || name.includes('search') || name.includes('note')) {
-          result = await this.tools.context.handleTool(name, args);
-        } else if (name.includes('session') || name.includes('knowledge') || name.includes('memory') || name.includes('retrieve') || name.includes('query')) {
-          result = await this.tools.memory.handleTool(name, args);
-        } else {
-          throw new Error(`Unknown tool: ${name}`);
-        }
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(result, null, 2)
-            }
-          ],
-          isError: false
-        };
-      } catch (error) {
-        return {
-          content: [
-            {
-              type: "text", 
-              text: `Error: ${error instanceof Error ? error.message : String(error)}`
-            }
-          ],
-          isError: true
-        };
+        return { tools: allTools };
       }
-    });
+    );
+
+    this.server.setRequestHandler(
+      CallToolRequestSchema,
+      async (request: CallToolRequest): Promise<CallToolResult> => {
+        const { name, arguments: args } = request.params;
+
+        console.error(`[DEBUG] Tool called: ${name}`);
+
+        try {
+          let result;
+
+          // Route to appropriate tool handler
+          if (
+            name === 'create_project' ||
+            name === 'get_project' ||
+            name === 'update_project' ||
+            name === 'list_projects'
+          ) {
+            console.error(`[DEBUG] Routing to project tool`);
+            result = await this.tools.project.handleTool(name, args);
+          } else if (
+            name.includes('feature_workflow') ||
+            name.includes('workflow')
+          ) {
+            // Handle feature workflow tools
+            console.error(`[DEBUG] Routing to feature workflow tool`);
+            result = await this.featureWorkflowTools.handleTool(name, args);
+          } else if (name.includes('spec')) {
+            console.error(`[DEBUG] Routing to spec tool`);
+            result = await this.tools.spec.handleTool(name, args);
+          } else if (name.includes('task') || name.includes('progress')) {
+            console.error(`[DEBUG] Routing to task tool`);
+            result = await this.tools.task.handleTool(name, args);
+          } else if (
+            name.includes('session') ||
+            name.includes('knowledge') ||
+            name.includes('memory') ||
+            name.includes('retrieve') ||
+            name.includes('query')
+          ) {
+            console.error(`[DEBUG] Routing to memory tool`);
+            result = await this.tools.memory.handleTool(name, args);
+          } else if (
+            name.includes('context') ||
+            name.includes('search') ||
+            name.includes('note')
+          ) {
+            console.error(`[DEBUG] Routing to context tool`);
+            result = await this.tools.context.handleTool(name, args);
+          } else {
+            console.error(`[DEBUG] No route found for tool: ${name}`);
+            throw new Error(`Unknown tool: ${name}`);
+          }
+
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify(result, null, 2),
+              },
+            ],
+            isError: false,
+          };
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+              },
+            ],
+            isError: true,
+          };
+        }
+      }
+    );
   }
 
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error("Project Agent MCP Server running on stdio");
+    console.error('Project Agent MCP Server running on stdio');
   }
 }
 

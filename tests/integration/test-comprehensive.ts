@@ -53,8 +53,9 @@ class MCPTester {
     console.log('🚀 Starting Comprehensive MCP Server Test Suite...');
     console.log('Testing all tools according to PRD requirements\n');
 
-    this.server = spawn('node', ['dist/index.js'], {
-      stdio: ['pipe', 'pipe', 'pipe']
+    this.server = spawn('node', ['dist/src/index.js'], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      cwd: '../../mcp-server',
     });
 
     this.server.stderr?.on('data', (data: Buffer) => {
@@ -80,26 +81,42 @@ class MCPTester {
     try {
       const response: MCPResponse = JSON.parse(data.toString());
       const test = this.tests[this.currentTest - 1];
-      
+
       console.log(`✅ ${test.name}:`);
-      
+
       if (response.result && !response.result.isError) {
         const content = JSON.parse(response.result.content![0].text);
-        console.log(`   Result: ${JSON.stringify(content, null, 2).substring(0, 200)}...`);
-        
+        console.log(
+          `   Result: ${JSON.stringify(content, null, 2).substring(0, 200)}...`
+        );
+
         // Store IDs for subsequent tests
         if (content.project_id) this.projectId = content.project_id;
         if (content.spec_id) this.specId = content.spec_id;
         if (content.task_id) this.taskId = content.task_id;
-        
-        this.testResults.push({ name: test.name, status: 'PASS', result: content });
+
+        this.testResults.push({
+          name: test.name,
+          status: 'PASS',
+          result: content,
+        });
       } else {
-        console.log(`   ❌ Error: ${response.result?.content?.[0]?.text || 'Unknown error'}`);
-        this.testResults.push({ name: test.name, status: 'FAIL', error: response.result?.content?.[0]?.text });
+        console.log(
+          `   ❌ Error: ${response.result?.content?.[0]?.text || 'Unknown error'}`
+        );
+        this.testResults.push({
+          name: test.name,
+          status: 'FAIL',
+          error: response.result?.content?.[0]?.text,
+        });
       }
     } catch (e) {
       console.log(`   ❌ Parse Error: ${(e as Error).message}`);
-      this.testResults.push({ name: this.tests[this.currentTest - 1]?.name, status: 'FAIL', error: (e as Error).message });
+      this.testResults.push({
+        name: this.tests[this.currentTest - 1]?.name,
+        status: 'FAIL',
+        error: (e as Error).message,
+      });
     }
 
     // Wait before next test
@@ -109,14 +126,17 @@ class MCPTester {
   private runNextTest(): void {
     if (this.currentTest < this.tests.length) {
       const test = this.tests[this.currentTest];
-      console.log(`\n📝 Test ${this.currentTest + 1}/${this.tests.length}: ${test.name}`);
-      
+      console.log(
+        `\n📝 Test ${this.currentTest + 1}/${this.tests.length}: ${test.name}`
+      );
+
       // Replace placeholders with actual IDs
       let request = JSON.stringify(test.request);
-      if (this.projectId) request = request.replace('{{PROJECT_ID}}', this.projectId);
+      if (this.projectId)
+        request = request.replace('{{PROJECT_ID}}', this.projectId);
       if (this.specId) request = request.replace('{{SPEC_ID}}', this.specId);
       if (this.taskId) request = request.replace('{{TASK_ID}}', this.taskId);
-      
+
       this.server?.stdin?.write(request + '\n');
       this.currentTest++;
     } else {
@@ -128,21 +148,25 @@ class MCPTester {
     console.log('\n' + '='.repeat(60));
     console.log('📊 TEST RESULTS SUMMARY');
     console.log('='.repeat(60));
-    
+
     const passed = this.testResults.filter(r => r.status === 'PASS').length;
     const failed = this.testResults.filter(r => r.status === 'FAIL').length;
-    
+
     console.log(`\n✅ Passed: ${passed}`);
     console.log(`❌ Failed: ${failed}`);
-    console.log(`📈 Success Rate: ${((passed / this.testResults.length) * 100).toFixed(1)}%`);
-    
+    console.log(
+      `📈 Success Rate: ${((passed / this.testResults.length) * 100).toFixed(1)}%`
+    );
+
     if (failed > 0) {
       console.log('\n❌ Failed Tests:');
-      this.testResults.filter(r => r.status === 'FAIL').forEach(test => {
-        console.log(`   - ${test.name}: ${test.error}`);
-      });
+      this.testResults
+        .filter(r => r.status === 'FAIL')
+        .forEach(test => {
+          console.log(`   - ${test.name}: ${test.error}`);
+        });
     }
-    
+
     console.log('\n🏁 Test suite completed!');
     this.cleanup();
   }
@@ -168,10 +192,10 @@ class MCPTester {
             arguments: {
               name: 'Comprehensive Test Project',
               description: 'A project created during comprehensive testing',
-              status: 'planning'
-            }
-          }
-        }
+              status: 'planning',
+            },
+          },
+        },
       },
       {
         name: 'Get Project',
@@ -182,10 +206,10 @@ class MCPTester {
           params: {
             name: 'get_project',
             arguments: {
-              id: '{{PROJECT_ID}}'
-            }
-          }
-        }
+              id: '{{PROJECT_ID}}',
+            },
+          },
+        },
       },
       {
         name: 'Update Project',
@@ -198,10 +222,10 @@ class MCPTester {
             arguments: {
               id: '{{PROJECT_ID}}',
               status: 'active',
-              description: 'Updated project description'
-            }
-          }
-        }
+              description: 'Updated project description',
+            },
+          },
+        },
       },
       {
         name: 'List Projects',
@@ -211,11 +235,11 @@ class MCPTester {
           method: 'tools/call',
           params: {
             name: 'list_projects',
-            arguments: {}
-          }
-        }
+            arguments: {},
+          },
+        },
       },
-      
+
       // Specification Management Tests
       {
         name: 'Create Requirement Spec',
@@ -229,11 +253,12 @@ class MCPTester {
               project_id: '{{PROJECT_ID}}',
               type: 'requirement',
               title: 'User Authentication Requirements',
-              content: 'The system must support user login with email and password. Users should be able to reset passwords via email.',
-              priority: 'high'
-            }
-          }
-        }
+              content:
+                'The system must support user login with email and password. Users should be able to reset passwords via email.',
+              priority: 'high',
+            },
+          },
+        },
       },
       {
         name: 'Create Technical Spec',
@@ -247,11 +272,12 @@ class MCPTester {
               project_id: '{{PROJECT_ID}}',
               type: 'technical',
               title: 'Authentication API Design',
-              content: 'Use JWT tokens for authentication. Implement OAuth2 flow. Store user data in PostgreSQL.',
-              priority: 'medium'
-            }
-          }
-        }
+              content:
+                'Use JWT tokens for authentication. Implement OAuth2 flow. Store user data in PostgreSQL.',
+              priority: 'medium',
+            },
+          },
+        },
       },
       {
         name: 'Get Specs',
@@ -262,10 +288,10 @@ class MCPTester {
           params: {
             name: 'get_specs',
             arguments: {
-              project_id: '{{PROJECT_ID}}'
-            }
-          }
-        }
+              project_id: '{{PROJECT_ID}}',
+            },
+          },
+        },
       },
       {
         name: 'Update Spec',
@@ -278,10 +304,10 @@ class MCPTester {
             arguments: {
               id: '{{SPEC_ID}}',
               status: 'active',
-              priority: 'critical'
-            }
-          }
-        }
+              priority: 'critical',
+            },
+          },
+        },
       },
       {
         name: 'Validate Specs',
@@ -292,12 +318,12 @@ class MCPTester {
           params: {
             name: 'validate_specs',
             arguments: {
-              project_id: '{{PROJECT_ID}}'
-            }
-          }
-        }
+              project_id: '{{PROJECT_ID}}',
+            },
+          },
+        },
       },
-      
+
       // Task Management Tests
       {
         name: 'Create Task',
@@ -312,10 +338,10 @@ class MCPTester {
               spec_id: '{{SPEC_ID}}',
               title: 'Implement User Login API',
               description: 'Create REST API endpoints for user authentication',
-              assignee: 'developer@example.com'
-            }
-          }
-        }
+              assignee: 'developer@example.com',
+            },
+          },
+        },
       },
       {
         name: 'Update Task Progress',
@@ -329,10 +355,10 @@ class MCPTester {
               id: '{{TASK_ID}}',
               status: 'in-progress',
               progress: 50,
-              notes: 'API endpoints created, working on authentication logic'
-            }
-          }
-        }
+              notes: 'API endpoints created, working on authentication logic',
+            },
+          },
+        },
       },
       {
         name: 'Get Tasks',
@@ -343,10 +369,10 @@ class MCPTester {
           params: {
             name: 'get_tasks',
             arguments: {
-              project_id: '{{PROJECT_ID}}'
-            }
-          }
-        }
+              project_id: '{{PROJECT_ID}}',
+            },
+          },
+        },
       },
       {
         name: 'Analyze Progress',
@@ -357,12 +383,12 @@ class MCPTester {
           params: {
             name: 'analyze_progress',
             arguments: {
-              project_id: '{{PROJECT_ID}}'
-            }
-          }
-        }
+              project_id: '{{PROJECT_ID}}',
+            },
+          },
+        },
       },
-      
+
       // Context Management Tests
       {
         name: 'Add Context Note',
@@ -374,15 +400,16 @@ class MCPTester {
             name: 'add_context_note',
             arguments: {
               project_id: '{{PROJECT_ID}}',
-              content: 'Decision made to use JWT tokens instead of session cookies for better scalability',
+              content:
+                'Decision made to use JWT tokens instead of session cookies for better scalability',
               event_type: 'decision',
               metadata: {
                 decision_maker: 'tech_lead',
-                alternatives_considered: ['session_cookies', 'oauth_only']
-              }
-            }
-          }
-        }
+                alternatives_considered: ['session_cookies', 'oauth_only'],
+              },
+            },
+          },
+        },
       },
       {
         name: 'Get Project Context',
@@ -395,10 +422,10 @@ class MCPTester {
             arguments: {
               project_id: '{{PROJECT_ID}}',
               include_memory: true,
-              memory_limit: 10
-            }
-          }
-        }
+              memory_limit: 10,
+            },
+          },
+        },
       },
       {
         name: 'Search Context',
@@ -411,11 +438,11 @@ class MCPTester {
             arguments: {
               project_id: '{{PROJECT_ID}}',
               query: 'authentication JWT',
-              event_types: ['decision', 'spec_change']
-            }
-          }
-        }
-      }
+              event_types: ['decision', 'spec_change'],
+            },
+          },
+        },
+      },
     ];
   }
 }

@@ -2,7 +2,7 @@
 
 **AI-powered project management with MCP server integration and N8N automation**
 
-A self-hosted project management system that integrates with AI assistants through the Model Context Protocol (MCP). Manage specifications, track progress, and automate workflows locally.  
+A self-hosted project management system that integrates with AI assistants through the Model Context Protocol (MCP). Manage specifications, track progress, and automate workflows locally.
 
 ## Quick Start
 
@@ -11,6 +11,7 @@ A self-hosted project management system that integrates with AI assistants throu
 **One installation, use for all projects**:
 
 1. **Clone and setup**:
+
    ```bash
    git clone <this-repo> ~/tools/project-agent
    cd ~/tools/project-agent
@@ -18,6 +19,7 @@ A self-hosted project management system that integrates with AI assistants throu
    ```
 
 2. **Start the MCP server**:
+
    ```bash
    cd ~/tools/project-agent/mcp-server
    npm run build
@@ -45,11 +47,12 @@ npm start  # Keep running in background
 ```
 
 **The agent automatically creates**:
-   - `.specs/` folder with project specifications
-   - Feature directories with conventional commit prefixes (e.g., `1-feat-authentication/`)
-   - Project-specific organization under `.specs/project-name/`
-   - Task lists and workflow phases
-   - Progress tracking and checkpoints
+
+- `.specs/` folder with project specifications
+- Feature directories with conventional commit prefixes (e.g., `1-feat-authentication/`)
+- Project-specific organization under `.specs/project-name/`
+- Task lists and workflow phases
+- Progress tracking and checkpoints
 
 ### 📚 Documentation
 
@@ -60,6 +63,8 @@ npm start  # Keep running in background
 - 🧠 [**Memory Management Guide**](docs/MEMORY_MANAGEMENT_GUIDE.md) - Context storage for LLMs
 - 📝 [**Memory Tools Reference**](docs/MEMORY_TOOLS_REFERENCE.md) - Quick reference for memory tools
 - 🔗 [**N8N Integration Guide**](docs/N8N_INTEGRATION_GUIDE.md) - Workflow automation
+- 🧪 [**Testing Guide**](docs/TESTING_GUIDE.md) - Comprehensive testing documentation
+- 📊 [**Code Coverage Guide**](docs/CODE_COVERAGE_GUIDE.md) - Coverage setup and GitHub integration
 
 ## Features
 
@@ -82,17 +87,77 @@ npm start  # Keep running in background
 - [Memory Tools Reference](docs/MEMORY_TOOLS_REFERENCE.md) - Quick reference for memory tools
 - [N8N Setup Guide](docs/N8N_SETUP_GUIDE.md) - Installation and configuration
 - [N8N Integration Guide](docs/N8N_INTEGRATION_GUIDE.md) - Workflows and examples
+- [Testing Guide](docs/TESTING_GUIDE.md) - Comprehensive testing documentation
 
-## Testing
+## Development & Testing
+
+### Quick Commands
 
 ```bash
-# Test the integration
-npm run test:integration
+# Setup and build
+npm run setup          # Run setup script
+npm run build          # Build TypeScript
+npm run build:watch    # Build in watch mode
+npm run clean          # Clean build artifacts
+
+# Development
+npm start              # Start MCP server
+npm run dev            # Start in development mode
+npm run start:watch    # Start with auto-restart
+
+# Testing
+npm test               # Run basic tests
+npm run test:all       # Run all test suites
+npm run test:coverage  # Run tests with coverage
+npm run test:watch     # Run tests in watch mode
+npm run test:unit      # Run unit tests only
+npm run test:integration # Run integration tests
+npm run test:mcp-tools # Run MCP tools tests
+npm run test:mcp-server # Run MCP server tests
+
+# Code Quality
+npm run lint           # Run ESLint
+npm run lint:check     # Check linting without fixing
+npm run format         # Format code with Prettier
+npm run format:check   # Check formatting
+npm run type-check     # TypeScript type checking
+
+# Documentation
+npm run docs:serve     # Serve documentation locally
+
+# Deployment
+npm run deploy         # Deploy with Docker
+npm run docker:build   # Build Docker image
+npm run docker:run     # Run Docker container
 ```
+
+### Code Coverage
+
+The project includes comprehensive code coverage tracking:
+
+- **GitHub Integration**: Automatic coverage reporting on PRs
+- **Coverage Services**: Codecov and Coveralls integration
+- **Coverage Badge**: Real-time coverage status
+- **HTML Reports**: Interactive coverage analysis
+
+See [Code Coverage Guide](docs/CODE_COVERAGE_GUIDE.md) for setup and usage.
+
+### Testing Suite
+
+Comprehensive testing organized in the `tests/` directory:
+
+```bash
+# Legacy commands (still supported)
+cd tests/mcp-tools && node test-all-tools-comprehensive.js
+cd tests/integration && npx ts-node test-comprehensive.ts
+```
+
+See [Testing Guide](docs/TESTING_GUIDE.md) for complete testing documentation.
 
 ## How It Works
 
 The system provides project context to AI assistants through MCP, enabling them to:
+
 - Create planning-first workflows with conversational interfaces
 - Track project specifications and requirements with real-time synchronization
 - Monitor task progress with plain English summaries and automated updates
@@ -128,6 +193,7 @@ The system provides project context to AI assistants through MCP, enabling them 
 ```
 
 **Components:**
+
 - **MCP Server** (`mcp-server/`) - Core project management engine
 - **SQLite Database** - Project data persistence
 - **N8N Workflows** (`n8n-workflows/`) - Automation and monitoring

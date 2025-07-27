@@ -4,13 +4,14 @@ Get Project Agent running in 5 minutes.
 
 ## Prerequisites
 
-- Node.js 20.19+ 
+- Node.js 20.19+
 - Git
 - SQLite3
 
 ## Installation
 
 ### Recommended Setup
+
 **Best for most users:** One installation, use for all projects
 
 **Install Project Agent:**
@@ -40,6 +41,7 @@ mkdir my-awesome-app && cd my-awesome-app
 ```
 
 The agent automatically creates:
+
 - `.specs/<project-name>/` folder with sequentially numbered feature-based subdirectories
 - Directory format: `1-feat-create-app-footer`, `2-fix-login-bug`, `3-docs-update-readme`, `4-refactor-auth-module`, etc.
 - Uses standard conventional commit prefixes: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
@@ -76,6 +78,7 @@ npm run test:integration
 ```
 
 **Expected Output:**
+
 ```
 🚀 N8N Integration Demo Starting...
 📊 Found 3 active projects to analyze
@@ -125,13 +128,14 @@ n8n start
 ### Cursor AI
 
 1. Add to your Cursor settings:
+
 ```json
 {
   "mcp": {
     "servers": {
       "project-agent": {
         "command": "node",
-        "args": ["/path/to/project-agent/mcp-server/dist/index.js"]
+        "args": ["/path/to/project-agent/mcp-server/dist/src/index.js"]
       }
     }
   }
@@ -141,12 +145,13 @@ n8n start
 ### Claude Desktop
 
 1. Add to `~/.claude_desktop_config.json`:
+
 ```json
 {
   "mcpServers": {
     "project-agent": {
       "command": "node",
-      "args": ["/path/to/project-agent/mcp-server/dist/index.js"]
+      "args": ["/path/to/project-agent/mcp-server/dist/src/index.js"]
     }
   }
 }
@@ -155,12 +160,13 @@ n8n start
 ### Trae IDE
 
 1. Add to your Trae configuration:
+
 ```json
 {
   "mcpServers": {
     "project-agent": {
       "command": "node",
-      "args": ["/path/to/project-agent/mcp-server/dist/index.js"]
+      "args": ["/path/to/project-agent/mcp-server/dist/src/index.js"]
     }
   }
 }
@@ -179,6 +185,7 @@ npm run test:clients
 ## Available MCP Tools
 
 ### Project Management
+
 - `create_project`: Initialize new project
 - `get_project`: Retrieve project details
 - `update_project`: Modify project info
@@ -188,6 +195,7 @@ npm run test:clients
 - `search_context`: Search project context
 
 ### Feature-Based Workflow Management
+
 - `create_feature_directory`: Create feature directory structure
 - `create_feature_workflow`: Create a new feature workflow
 - `update_feature_task`: Update tasks within a specific feature
@@ -196,12 +204,14 @@ npm run test:clients
 - `create_feature_checkpoint`: Create checkpoint for completed feature
 
 ### Specification Management
+
 - `create_spec`: Add new specification
 - `get_specs`: Retrieve project specs
 - `update_spec`: Modify specifications
 - `validate_specs`: Check consistency
 
 ### Task Tracking
+
 - `create_task`: Add new task
 - `get_tasks`: List project tasks
 - `analyze_progress`: Generate reports

@@ -66,6 +66,7 @@ This is the most efficient approach for most developers:
 #### Initial Setup (Once)
 
 1. **Install the Project Agent**:
+
    ```bash
    git clone <this-repo> ~/tools/project-agent
    cd ~/tools/project-agent
@@ -82,7 +83,9 @@ This is the most efficient approach for most developers:
      "mcpServers": {
        "project-agent": {
          "command": "node",
-         "args": ["/Users/yourname/tools/project-agent/mcp-server/dist/index.js"],
+         "args": [
+           "/Users/yourname/tools/project-agent/mcp-server/dist/src/index.js"
+         ]
        }
      }
    }
@@ -98,12 +101,14 @@ This is the most efficient approach for most developers:
 #### For Each New Project
 
 1. **Create your project directory**:
+
    ```bash
    mkdir my-awesome-app
    cd my-awesome-app
    ```
 
 2. **Initialize with Project Agent** (via AI assistant):
+
    ```
    # In your AI assistant chat:
    "Create a new project called 'my-awesome-app' for a React web application"
@@ -158,6 +163,7 @@ my-project/
 ### Project-Based Organization
 
 **Each project gets its own unique .specs folder** containing:
+
 - **Project-level specs** - Overall architecture, user stories, main tasks
 - **Feature subdirectories** - Each major feature has its own folder
 - **Feature-specific tasks** - Separate task.md files per feature
@@ -180,6 +186,7 @@ my-project/
 ### Customization
 
 You can:
+
 - ✅ Edit generated specs for your project
 - ✅ Add custom phases or tasks
 - ✅ Create new feature folders as needed
@@ -190,6 +197,7 @@ You can:
 ## MCP Tools Available
 
 ### Project Management
+
 - `create_project`: Initialize new project
 - `get_project`: Retrieve project details
 - `update_project`: Modify project info
@@ -199,18 +207,21 @@ You can:
 - `search_context`: Search project context
 
 ### Specification Management
+
 - `create_spec`: Add new specification
 - `get_specs`: Retrieve project specs
 - `update_spec`: Modify specifications
 - `validate_specs`: Check consistency
 
 ### Task Tracking
+
 - `create_task`: Add new task
 - `update_task_progress`: Mark progress
 - `get_tasks`: List project tasks
 - `analyze_progress`: Generate reports
 
 ### Feature-Based Workflow Management
+
 - `create_feature_directory`: Create feature directory structure with conventional commit prefixes (feat, fix, docs, etc.)
 - `update_feature_task`: Update a task within a specific feature
 - `get_feature_progress`: Get progress summary for a specific feature
@@ -235,7 +246,7 @@ You can:
 ### 1. Chat with AI Assistant
 
 ```
-User: "I want to create a new React application for an e-commerce store. 
+User: "I want to create a new React application for an e-commerce store.
 It should have user authentication, product catalog, shopping cart, and payment processing."
 
 AI: 🚀 I'll help you set up this project with the Project Agent!
@@ -279,6 +290,7 @@ AI: 🎉 Great! Let me update your progress.
 ## Best Practices
 
 ### ✅ Do
+
 - Keep the MCP server running in background
 - Use AI assistant to interact with Project Agent
 - Let the agent manage task IDs and database sync
@@ -286,6 +298,7 @@ AI: 🎉 Great! Let me update your progress.
 - Use checkpoints to validate phase completion
 
 ### ❌ Don't
+
 - Manually edit task IDs in markdown files
 - Run multiple MCP servers simultaneously
 - Modify the database directly
@@ -294,6 +307,7 @@ AI: 🎉 Great! Let me update your progress.
 ## Troubleshooting
 
 ### MCP Server Not Responding
+
 ```bash
 cd ~/tools/project-agent/mcp-server
 npm run build
@@ -302,11 +316,13 @@ npm start
 ```
 
 ### AI Assistant Can't Find Tools
+
 - Verify MCP server configuration
 - Check server is running on correct port
 - Restart AI assistant
 
 ### Database Issues
+
 ```bash
 # Reset database (loses all projects!)
 rm ~/tools/project-agent/mcp-server/data/projects.db
@@ -325,6 +341,7 @@ If you want to convert this to an NPM package later:
 ## Summary
 
 **For most users**: Use Option 1 (Shared Installation)
+
 - One central Project Agent installation
 - Create projects anywhere
 - Consistent tooling across all projects

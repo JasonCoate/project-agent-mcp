@@ -3,6 +3,7 @@
 ## Available Tools
 
 ### 🧠 store_session_context
+
 **Store analysis results, decisions, and insights**
 
 ```json
@@ -31,6 +32,7 @@
 ```
 
 ### 🔍 retrieve_relevant_context
+
 **Get relevant context for current task**
 
 ```json
@@ -45,6 +47,7 @@
 ```
 
 ### 📸 create_knowledge_snapshot
+
 **Create comprehensive project state snapshot**
 
 ```json
@@ -67,13 +70,21 @@
 ```
 
 ### 🔎 query_project_knowledge
+
 **Search project knowledge with natural language**
 
 ```json
 {
   "project_id": "string",
   "query": "Natural language question about the project",
-  "knowledge_types": ["decisions", "architecture", "code_changes", "insights", "challenges", "patterns"],
+  "knowledge_types": [
+    "decisions",
+    "architecture",
+    "code_changes",
+    "insights",
+    "challenges",
+    "patterns"
+  ],
   "time_range": "last_day|last_week|last_month|all_time"
 }
 ```
@@ -81,6 +92,7 @@
 ## Quick Workflows
 
 ### 🚀 Session Start
+
 ```
 1. retrieve_relevant_context
 2. Review returned context
@@ -88,6 +100,7 @@
 ```
 
 ### 🏁 Session End
+
 ```
 1. Summarize key insights
 2. store_session_context
@@ -95,6 +108,7 @@
 ```
 
 ### 🎯 Feature Development
+
 ```
 Planning:
 - query_project_knowledge for similar features
@@ -111,6 +125,7 @@ Review:
 ```
 
 ### 🐛 Bug Investigation
+
 ```
 1. query_project_knowledge with error description
 2. retrieve_relevant_context for recent changes
@@ -118,6 +133,7 @@ Review:
 ```
 
 ### 🏗️ Architecture Review
+
 ```
 1. create_knowledge_snapshot of current state
 2. query_project_knowledge for decisions
@@ -126,18 +142,19 @@ Review:
 
 ## Memory Types
 
-| Type | Purpose | When to Use |
-|------|---------|-------------|
-| `session_context` | Store session results | End of work sessions |
-| `knowledge_snapshot` | Comprehensive state | Major milestones |
-| `decision` | Individual decisions | Important choices |
-| `note` | General information | Ongoing observations |
-| `issue` | Problems found | Bug reports |
-| `milestone` | Project milestones | Achievement markers |
+| Type                 | Purpose               | When to Use          |
+| -------------------- | --------------------- | -------------------- |
+| `session_context`    | Store session results | End of work sessions |
+| `knowledge_snapshot` | Comprehensive state   | Major milestones     |
+| `decision`           | Individual decisions  | Important choices    |
+| `note`               | General information   | Ongoing observations |
+| `issue`              | Problems found        | Bug reports          |
+| `milestone`          | Project milestones    | Achievement markers  |
 
 ## Best Practices
 
 ### ✅ Do
+
 - Start sessions with `retrieve_relevant_context`
 - End sessions with `store_session_context`
 - Include reasoning in decisions
@@ -146,6 +163,7 @@ Review:
 - Document alternatives considered
 
 ### ❌ Don't
+
 - Store vague or generic information
 - Skip context retrieval at session start
 - Forget to include next steps
@@ -156,26 +174,31 @@ Review:
 ## Common Patterns
 
 ### New Feature
+
 ```
 retrieve_relevant_context → plan → implement → store_session_context
 ```
 
 ### Bug Fix
+
 ```
 query_project_knowledge → investigate → fix → store_session_context
 ```
 
 ### Code Review
+
 ```
 retrieve_relevant_context → review → store_session_context
 ```
 
 ### Architecture Decision
+
 ```
 query_project_knowledge → analyze → decide → create_knowledge_snapshot
 ```
 
 ### Refactoring
+
 ```
 create_knowledge_snapshot → plan → refactor → store_session_context
 ```
@@ -183,6 +206,7 @@ create_knowledge_snapshot → plan → refactor → store_session_context
 ## Integration Examples
 
 ### With Cursor AI
+
 ```typescript
 // In .cursorrules
 // 1. Always start with context retrieval
@@ -191,6 +215,7 @@ create_knowledge_snapshot → plan → refactor → store_session_context
 ```
 
 ### With Claude Desktop
+
 ```json
 // Use MCP tools directly
 // Maintain conversation context
@@ -198,6 +223,7 @@ create_knowledge_snapshot → plan → refactor → store_session_context
 ```
 
 ### With Trae IDE
+
 ```json
 // Integrate into development workflow
 // Store code review insights
@@ -205,6 +231,7 @@ create_knowledge_snapshot → plan → refactor → store_session_context
 ```
 
 ### With CLI Scripts
+
 ```bash
 # Automate memory management
 # Script context storage
@@ -213,14 +240,14 @@ create_knowledge_snapshot → plan → refactor → store_session_context
 
 ## Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| No context found | Check project_id, use broader terms |
-| Too much context | Use filters, specific queries |
+| Problem            | Solution                             |
+| ------------------ | ------------------------------------ |
+| No context found   | Check project_id, use broader terms  |
+| Too much context   | Use filters, specific queries        |
 | Irrelevant results | Improve storage quality, be specific |
-| Performance slow | Limit results, use time ranges |
-| Missing decisions | Include reasoning when storing |
-| Outdated info | Regular cleanup, update snapshots |
+| Performance slow   | Limit results, use time ranges       |
+| Missing decisions  | Include reasoning when storing       |
+| Outdated info      | Regular cleanup, update snapshots    |
 
 ## Tips for LLMs With Thinking Capabilities
 

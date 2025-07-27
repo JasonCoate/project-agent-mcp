@@ -1,5 +1,5 @@
 # Project Agent MCP Configuration
-export MCP_SERVER_PATH="./mcp-server/dist/index.js"
+export MCP_SERVER_PATH="./mcp-server/dist/src/index.js"
 export PROJECT_AGENT_DB="./database/project.db"
 
 # Enable MCP tools

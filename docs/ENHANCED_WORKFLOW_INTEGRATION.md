@@ -7,6 +7,7 @@ The Enhanced Workflow System is fully integrated into the Project Agent MCP serv
 ## Key Features
 
 ### 🗣️ Conversational Interface
+
 - **Plain English Announcements**: All MCP tool calls include pre-call announcements explaining what's about to happen
 - **Formatted Parameter Display**: Tool parameters are displayed with icons and clear formatting
 - **Success Summaries**: Post-call summaries provide clear results without JSON noise
@@ -14,6 +15,7 @@ The Enhanced Workflow System is fully integrated into the Project Agent MCP serv
 - **Progress Tracking**: In-memory progress tracking for session continuity
 
 ### 🔄 Task Synchronization
+
 - **Bidirectional Sync**: Tasks are synchronized between markdown files and database
 - **Automatic Updates**: Markdown checkboxes are automatically updated when tasks are completed
 - **Progress Notifications**: Chat-friendly task update messages
@@ -21,6 +23,7 @@ The Enhanced Workflow System is fully integrated into the Project Agent MCP serv
 - **Dynamic Task Addition**: Add new tasks with automatic ID generation
 
 ### 📊 Progress Tracking
+
 - **Phase Completion**: Checkpoint validation for workflow phases
 - **Visual Progress**: Progress bars and completion percentages
 - **Milestone Tracking**: Automated milestone detection and reporting
@@ -47,18 +50,21 @@ The following tools have been enhanced with conversational wrappers:
 ### Core Components
 
 #### 1. ConversationalWrapper (`mcp-server/src/tools/conversational-wrapper.ts`)
+
 - Wraps all MCP tool calls with conversational elements
 - Provides pre-call announcements and post-call summaries
 - Tracks progress in memory for session continuity
 - Formats parameters with icons and clear structure
 
 #### 2. TaskListManager (`mcp-server/src/tools/task-list-manager.ts`)
+
 - Manages synchronization between markdown and database
 - Handles automatic checkbox updates
 - Generates progress summaries and checkpoint validations
 - Creates chat-friendly task update messages
 
 #### 3. FeatureWorkflowTools (`mcp-server/src/tools/feature-workflow-tools.ts`)
+
 - Enhanced workflow management tools
 - Integration with conversational wrapper
 - Support for feature-based project organization
@@ -77,24 +83,28 @@ The enhanced workflow **extends** (not replaces) the existing `.specs/` director
 ## Workflow Process
 
 ### 1. Planning Phase
+
 - Create planning document with clear vision and requirements
 - Define success criteria and risk mitigation
 - Establish resource requirements and timelines
 - Validate stakeholder alignment
 
 ### 2. Specification Generation
+
 - Generate specs from approved planning documents
 - Validate alignment with planning goals
 - Create traceability from requirements to implementation
 - Implement review and approval process
 
 ### 3. Task Creation and Tracking
+
 - Automatic task creation from approved specs
 - Real-time progress tracking with markdown sync
 - Plain English status updates
 - Task dependency management
 
 ### 4. Execution with Visibility
+
 - Execute tasks with conversational feedback
 - Maintain audit trail of decisions
 - Automated progress reporting
@@ -117,7 +127,7 @@ The enhanced workflow **extends** (not replaces) the existing `.specs/` director
 const result = await mcp.call('create_feature_workflow', {
   project_id: 'my-project',
   feature_name: 'User Authentication',
-  description: 'OAuth integration with social providers'
+  description: 'OAuth integration with social providers',
 });
 ```
 
@@ -138,7 +148,7 @@ const result = await mcp.call('update_task_with_sync', {
   workflow_id: 'workflow-123',
   task_id: 'task-1234',
   completed: true,
-  notes: 'API endpoints implemented and tested'
+  notes: 'API endpoints implemented and tested',
 });
 ```
 
@@ -157,13 +167,14 @@ const result = await mcp.call('update_task_with_sync', {
 
 const result = await mcp.call('create_checkpoint', {
   workflow_id: 'workflow-123',
-  phase: 'Architecture'
+  phase: 'Architecture',
 });
 ```
 
 ## Conversational Format Standards
 
 ### Tool Call Announcements
+
 ```
 🔧 **Next Action:** [What we're about to do]
 
@@ -178,6 +189,7 @@ const result = await mcp.call('create_checkpoint', {
 ```
 
 ### Progress Summaries
+
 ```
 📈 **Progress Summary**
 
@@ -198,6 +210,7 @@ const result = await mcp.call('create_checkpoint', {
 ```
 
 ### Checkpoint Validations
+
 ```
 🛑 **Checkpoint: Phase 1 Complete**
 
@@ -213,24 +226,28 @@ const result = await mcp.call('create_checkpoint', {
 ## Benefits
 
 ### 🗣️ Enhanced Communication
+
 - Clear, conversational tool interactions
 - Visual parameter formatting
 - Progress visibility without technical noise
 - User-friendly error messages
 
 ### 🔄 Synchronized State
+
 - Markdown and database consistency
 - Real-time task updates
 - Automated progress tracking
 - Bidirectional synchronization
 
 ### 🛑 Quality Gates
+
 - Phase completion validation
 - Checkpoint system
 - Progress verification before proceeding
 - Quality standards enforcement
 
 ### 📊 Improved Visibility
+
 - Chat-based progress updates
 - Visual task completion indicators
 - Comprehensive summary reporting
@@ -239,17 +256,20 @@ const result = await mcp.call('create_checkpoint', {
 ## Migration and Compatibility
 
 ### Backward Compatibility
+
 - All existing MCP tools continue to work unchanged
 - Enhanced features are additive, not replacement
 - Existing projects can opt-in to enhanced workflow
 - No breaking changes to existing functionality
 
 ### Migration Path
+
 1. **Existing Projects**: Continue with current workflow
 2. **New Projects**: Automatically use enhanced workflow
 3. **Upgrade Option**: Migrate existing projects to enhanced workflow
 
 ### Success Metrics
+
 - Planning document creation time < 5 minutes
 - Spec generation accuracy > 95%
 - Progress translation accuracy > 90%
@@ -262,18 +282,22 @@ const result = await mcp.call('create_checkpoint', {
 ## Technical Details
 
 ### Database Schema Extensions
+
 New tables added to support enhanced workflow:
+
 - `spec_workflows`: Links specifications to workflow phases
 - `workflow_tasks`: Enhanced task tracking with phase information
 - `workflow_checkpoints`: Stores checkpoint validations
 - `progress_summaries`: Plain English progress snapshots
 
 ### Task Update Flow
+
 ```
 MCP Tool Call → Database Update → Markdown File Update → Chat Notification
 ```
 
 ### File Structure
+
 ```
 mcp-server/src/tools/
 ├── conversational-wrapper.ts   # Conversational MCP wrapper

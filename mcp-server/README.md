@@ -7,24 +7,28 @@ A Model Context Protocol (MCP) server for project management, providing AI assis
 ### 🚀 Core Tools
 
 **Project Management:**
+
 - `create_project` - Create new projects
 - `get_project` - Retrieve project details
 - `update_project` - Update project information
 - `list_projects` - List all projects
 
 **Specification Management:**
+
 - `create_spec` - Create project specifications
 - `get_specs` - Get specifications for a project
 - `update_spec` - Update existing specifications
 - `validate_specs` - Validate specification consistency
 
 **Task Management:**
+
 - `create_task` - Create new tasks
 - `update_task_progress` - Update task status and progress
 - `get_tasks` - Get tasks for a project
 - `analyze_progress` - Analyze project progress and bottlenecks
 
 **Context Management:**
+
 - `get_project_context` - Get comprehensive project context
 - `add_context_note` - Add contextual notes and decisions
 - `search_context` - Search through project context and memory
@@ -32,16 +36,19 @@ A Model Context Protocol (MCP) server for project management, providing AI assis
 ## Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Build the TypeScript project:
+
 ```bash
 npm run build
 ```
 
 3. Start the server:
+
 ```bash
 npm start
 ```
@@ -83,6 +90,7 @@ The server is configured for Trae IDE integration via `../configs/trae-config/pr
 ## Usage Examples
 
 ### Create a Project
+
 ```json
 {
   "name": "create_project",
@@ -94,6 +102,7 @@ The server is configured for Trae IDE integration via `../configs/trae-config/pr
 ```
 
 ### Create a Specification
+
 ```json
 {
   "name": "create_spec",
@@ -108,6 +117,7 @@ The server is configured for Trae IDE integration via `../configs/trae-config/pr
 ```
 
 ### Create a Task
+
 ```json
 {
   "name": "create_task",
@@ -131,6 +141,7 @@ The server is configured for Trae IDE integration via `../configs/trae-config/pr
 ## Development
 
 ### File Structure
+
 ```
 src/
 ├── database.ts          # Database manager
@@ -145,11 +156,13 @@ src/
 ```
 
 ### Building
+
 ```bash
 npm run build
 ```
 
 ### Running in Development
+
 ```bash
 npm run dev
 ```

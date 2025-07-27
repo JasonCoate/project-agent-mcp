@@ -2,7 +2,7 @@
   "mcpServers": {
     "project-agent": {
       "command": "node",
-      "args": ["./mcp-server/dist/index.js"]
+      "args": ["./mcp-server/dist/src/index.js"]
     }
   }
 }

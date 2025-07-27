@@ -12,18 +12,22 @@
 ## 🚀 Quick Setup (5 minutes)
 
 ### Prerequisites
+
 - **Node.js >=20.19**: N8N requires Node.js version 20.19 or higher (up to 24.x)
 - MCP server running (from your project's `/mcp-server` directory: `npm run build && npm start`)
 - N8N installed locally or via Docker
 - Internet connection for installing community nodes
 
 ### ⚠️ Node.js Version Check
+
 **CRITICAL**: Before starting, verify your Node.js version:
+
 ```bash
 node --version
 ```
 
 If your version is below 20.19, update Node.js:
+
 ```bash
 # Using nvm (recommended)
 nvm install 22.17.0
@@ -33,7 +37,9 @@ nvm use 22.17.0
 ```
 
 ### 📁 Path Configuration
+
 Before starting, note your project paths:
+
 - **Project Root**: Set in `.env` as `PROJECT_ROOT` (e.g., `/Users/yourname/development/project-agent`)
 - **Database Path**: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
 - **Workflows Path**: `${PROJECT_ROOT}/n8n-workflows/`
@@ -49,12 +55,14 @@ Before starting, note your project paths:
 **This is the proper way to install community nodes in N8N:**
 
 1. **Install the community node in N8N's nodes directory**:
+
    ```bash
    cd ~/.n8n/nodes
    npm install n8n-nodes-sqlite3
    ```
 
 2. **Verify installation**:
+
    ```bash
    cat ~/.n8n/nodes/package.json
    # Should show n8n-nodes-sqlite3 in dependencies
@@ -69,6 +77,7 @@ Before starting, note your project paths:
 #### Method 2: UI Installation (Alternative)
 
 1. **Start N8N**:
+
    ```bash
    n8n start
    ```
@@ -87,11 +96,13 @@ Before starting, note your project paths:
 **Note**: Manual installation in `~/.n8n/custom/` often causes recognition issues. Use Method 1 instead.
 
 1. **Create the custom nodes directory**:
+
    ```bash
    mkdir -p ~/.n8n/custom
    ```
 
 2. **Clone the SQLite3 node repository**:
+
    ```bash
    cd ~/.n8n/custom
    git clone https://github.com/DangerBlack/n8n-node-sqlite3.git
@@ -108,12 +119,15 @@ Before starting, note your project paths:
 #### Docker Setup (Alternative)
 
 **For Docker users**:
+
 ```bash
 docker run -it --rm --name n8n -p 5678:5678 -v ~/.n8n:/home/node/.n8n n8nio/n8n
 ```
+
 Then follow the same community node installation steps above.
 
 **Or add to docker-compose.yml**:
+
 ```yaml
 services:
   n8n:
@@ -161,6 +175,7 @@ When you add a **SQLite Node** to your workflow:
 ### Step 2.2: Workflow Node Type Format
 
 **Critical**: The workflows use the node type `n8n-nodes-sqlite3.sqliteNode`. This format is required for community nodes:
+
 - **Package name**: `n8n-nodes-sqlite3`
 - **Node name**: `sqliteNode`
 - **Full type**: `n8n-nodes-sqlite3.sqliteNode`
@@ -202,9 +217,10 @@ When you add a **SQLite Node** to your workflow:
 ### Step 4: Configure Each Workflow
 
 #### A. Project Monitor Workflow ✅ TESTED
+
 - **Purpose**: Monitors active projects every 30 minutes
 - **Status**: ✅ Working and tested
-- **Configuration**: 
+- **Configuration**:
   1. **Open the workflow** from your workflows list
   2. **Configure SQLite nodes**:
      - Click on the **"Get Active Projects"** node (SQLite icon)
@@ -219,6 +235,7 @@ When you add a **SQLite Node** to your workflow:
   4. **Activate**: Toggle the **"Active"** switch (top right)
 
 #### B. Progress Tracker Workflow
+
 - **Purpose**: Webhook for task updates
 - **Configuration**:
   1. **Open the workflow**
@@ -228,11 +245,12 @@ When you add a **SQLite Node** to your workflow:
      - Save this URL - you'll use it to trigger the workflow
   3. **Configure SQLite nodes**:
      - Click **"Get Project Tasks"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
-   - Click **"Log Progress"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
-   - Click **"Log Concerns"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
+  - Click **"Log Progress"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
+  - Click **"Log Concerns"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
   4. **Save** and **Activate** the workflow
 
 #### C. Spec Validator Workflow
+
 - **Purpose**: Webhook for specification changes
 - **Configuration**:
   1. **Open the workflow**
@@ -241,7 +259,7 @@ When you add a **SQLite Node** to your workflow:
      - Copy the **"Production URL"** (e.g., `http://localhost:5678/webhook/spec-change`)
   3. **Configure SQLite nodes**:
      - Click **"Get Project Specs"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
-   - Click **"Log Validation"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
+  - Click **"Log Validation"** node → Configure database path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
   4. **Save** and **Activate** the workflow
 
 ## 🆕 Creating New Workflows (Optional)
@@ -249,11 +267,13 @@ When you add a **SQLite Node** to your workflow:
 If you want to create custom workflows from scratch:
 
 ### Step 1: Create New Workflow
+
 1. Click **"+ New Workflow"** in N8N
 2. **Add nodes** by clicking the **"+"** button
 3. **Search for nodes**: "SQLite", "Webhook", "Schedule Trigger", etc.
 
 ### Step 2: Common Node Types
+
 - **Schedule Trigger**: For time-based automation
 - **Webhook**: For HTTP-triggered workflows
 - **SQLite3**: To query the project database (community node)
@@ -261,6 +281,7 @@ If you want to create custom workflows from scratch:
 - **HTTP Request**: To call external APIs
 
 ### Step 3: Connect to Database
+
 1. Add **SQLite** node (from the installed community node)
 2. Configure the node:
    - **Database Path**: `[YOUR_PROJECT_PATH]/mcp-server/data/project-agent.db`
@@ -281,19 +302,23 @@ The workflows integrate with your MCP server through the SQLite database. When y
 3. **Webhooks** → Trigger workflows on specific events
 
 ### Webhook URLs
+
 After setup, you'll have these webhook endpoints:
+
 - **Task Updates**: `http://localhost:5678/webhook/task-update`
 - **Spec Changes**: `http://localhost:5678/webhook/spec-change`
 
 ### Testing the Integration
 
 1. **Create a test project** using MCP server:
+
 ```bash
 cd ${PROJECT_ROOT}/mcp-server
 npm run test:create
 ```
 
 2. **Trigger workflows** by posting to webhooks:
+
 ```bash
 # Test progress tracker
 curl -X POST http://localhost:5678/webhook/task-update \
@@ -309,6 +334,7 @@ curl -X POST http://localhost:5678/webhook/spec-change \
 ## 📊 What Each Workflow Does
 
 ### 1. Project Monitor
+
 - **Frequency**: Every 30 minutes
 - **Actions**:
   - Checks all active projects
@@ -317,6 +343,7 @@ curl -X POST http://localhost:5678/webhook/spec-change \
   - Logs alerts for projects needing attention
 
 ### 2. Progress Tracker
+
 - **Trigger**: Webhook on task updates
 - **Actions**:
   - Calculates project progress metrics
@@ -325,6 +352,7 @@ curl -X POST http://localhost:5678/webhook/spec-change \
   - Logs progress milestones
 
 ### 3. Spec Validator
+
 - **Trigger**: Webhook on spec changes
 - **Actions**:
   - Validates specification coverage
@@ -335,20 +363,26 @@ curl -X POST http://localhost:5678/webhook/spec-change \
 ## 🔧 Advanced Configuration
 
 ### Environment Variables
+
 Set these in your N8N environment:
+
 ```bash
 PROJECT_AGENT_DB=${PROJECT_ROOT}/mcp-server/data/project-agent.db
-MCP_SERVER_PATH=${PROJECT_ROOT}/mcp-server/dist/index.js
+MCP_SERVER_PATH=${PROJECT_ROOT}/mcp-server/dist/src/index.js
 ```
 
 ### Custom Notifications
+
 To add Slack/email notifications:
+
 1. Add **Slack** or **Email** nodes after the "Log Alert" nodes
 2. Configure with your credentials
 3. Connect to the workflow paths
 
 ### Scheduling Changes
+
 To modify monitoring frequency:
+
 1. Open **Project Monitor** workflow
 2. Click **Schedule Trigger** node
 3. Adjust interval (default: 30 minutes)
@@ -358,7 +392,9 @@ To modify monitoring frequency:
 ### Critical Issues and Solutions
 
 #### 1. "Unrecognized node type" Errors
-**Symptoms**: 
+
+**Symptoms**:
+
 - `Unrecognized node type: sqliteNode`
 - `Unrecognized node type: sqliteNode.undefined`
 - `Unrecognized node type: n8n-nodes-sqlite3.sqliteNode`
@@ -366,6 +402,7 @@ To modify monitoring frequency:
 **Root Causes & Solutions**:
 
 **A. Node.js Version Incompatibility**
+
 ```bash
 # Check your Node.js version
 node --version
@@ -377,6 +414,7 @@ nvm use 22.17.0
 ```
 
 **B. Improper Community Node Installation**
+
 ```bash
 # Check if node is properly registered
 cat ~/.n8n/nodes/package.json
@@ -391,11 +429,13 @@ ls ~/.n8n/nodes/node_modules/ | grep sqlite
 
 **C. Wrong Node Type Format in Workflows**
 The workflows must use the exact format: `n8n-nodes-sqlite3.sqliteNode`
+
 - **Correct**: `n8n-nodes-sqlite3.sqliteNode`
 - **Incorrect**: `sqliteNode`, `sqliteNode.undefined`, `sqlite3Node`
 
 **D. Manual Installation Issues**
 If you used manual installation in `~/.n8n/custom/`, it may not be recognized:
+
 ```bash
 # Remove manual installation
 rm -rf ~/.n8n/custom/n8n-node-sqlite3
@@ -407,7 +447,7 @@ npm install n8n-nodes-sqlite3
 
 2. **"Database file not found" Error**
    **Cause**: Incorrect database path in SQLite node configuration
-   
+
    **Solutions**:
    - Verify the MCP server is running and has created the database
    - Check the exact path: `${PROJECT_ROOT}/mcp-server/data/project-agent.db`
@@ -416,30 +456,32 @@ npm install n8n-nodes-sqlite3
 
 3. **"Permission denied" Error**
    **Cause**: N8N doesn't have permission to access the database file
-   
+
    **Solutions**:
+
    ```bash
    # Make sure the database file is readable
    chmod 644 ${PROJECT_ROOT}/mcp-server/data/project-agent.db
-   
+
    # Make sure the directory is accessible
    chmod 755 ${PROJECT_ROOT}/mcp-server/data/
    ```
 
 4. **N8N Won't Start - "Unsupported Node.js Version"**
-   **Symptoms**: 
+   **Symptoms**:
    - `Error: Unsupported Node.js version`
    - `Node.js version 20.10.0 is not supported`
-   
+
    **Solution**:
+
    ```bash
    # Check current version
    node --version
-   
+
    # Install compatible version
    nvm install 22.17.0
    nvm use 22.17.0
-   
+
    # Verify and restart N8N
    node --version
    n8n start
@@ -447,7 +489,7 @@ npm install n8n-nodes-sqlite3
 
 5. **Workflow Import Issues**
    **Cause**: JSON format issues or missing nodes
-   
+
    **Solutions**:
    - Ensure SQLite community node is installed before importing
    - Check that JSON files are valid (use a JSON validator)
@@ -456,24 +498,25 @@ npm install n8n-nodes-sqlite3
 
 6. **MCP Server Connection Issues**
    **Cause**: MCP server not running or webhook URLs incorrect
-   
+
    **Solutions**:
+
    ```bash
    # Check if MCP server is running
    curl http://localhost:3001/health
-   
+
    # Restart MCP server if needed
    cd ${PROJECT_ROOT}/mcp-server
    npm run build
    npm start
    ```
-   
+
    - Verify webhook URLs in workflows match your MCP server port (default: 3001)
    - Check firewall settings if using different machines
 
 7. **"Unauthorized" Error When Accessing N8N**
    **Cause**: N8N authentication or setup issues
-   
+
    **Solutions**:
    - Check if N8N is properly started: `curl http://localhost:5678`
    - Restart N8N: Stop with Ctrl+C, then `n8n start`
@@ -483,43 +526,47 @@ npm install n8n-nodes-sqlite3
 ### Debug Steps
 
 1. **Complete System Check**:
+
    ```bash
    # Check Node.js version (must be >=20.19)
    node --version
-   
+
    # Check N8N version
    n8n --version
-   
+
    # Check if N8N is running
    curl http://localhost:5678
    ```
 
 2. **Verify Community Node Installation**:
+
    ```bash
    # Check if properly installed in N8N nodes directory
    cat ~/.n8n/nodes/package.json | grep sqlite
-   
+
    # Check node modules
    ls ~/.n8n/nodes/node_modules/ | grep sqlite
-   
+
    # Check for manual installation (should be empty)
    ls ~/.n8n/custom/ 2>/dev/null || echo "No custom directory (good)"
    ```
 
 3. **Test Database Connection**:
+
    ```bash
    # Test if database file exists and is readable
    sqlite3 ${PROJECT_ROOT}/mcp-server/data/project-agent.db ".tables"
-   
+
    # Check database permissions
    ls -la ${PROJECT_ROOT}/mcp-server/data/project-agent.db
    ```
 
 4. **Check MCP Server**:
+
    ```bash
    # Test MCP server health
    curl http://localhost:3001/health
-   
+
    # Check MCP server logs
    cd ${PROJECT_ROOT}/mcp-server
    npm start
@@ -535,51 +582,55 @@ npm install n8n-nodes-sqlite3
 ### Quick Fixes
 
 1. **Complete Reset** (if nothing else works):
+
    ```bash
    # Stop N8N
    # Ctrl+C in terminal
-   
+
    # Remove all N8N data (CAUTION: This deletes all workflows)
    rm -rf ~/.n8n
-   
+
    # Reinstall N8N with correct Node.js version
    nvm use 22.17.0
    npm uninstall -g n8n
    npm install -g n8n
-   
+
    # Create nodes directory and install community node
    mkdir -p ~/.n8n/nodes
    cd ~/.n8n/nodes
    npm init -y
    npm install n8n-nodes-sqlite3
-   
+
    # Start fresh
    n8n start
    ```
+
    Then follow the setup guide from Step 3 (Import Workflows).
 
 2. **Restart Everything with Correct Versions**:
+
    ```bash
    # Stop N8N (Ctrl+C)
    # Stop MCP server (Ctrl+C)
-   
+
    # Switch to correct Node.js version
    nvm use 22.17.0
-   
+
    # Start MCP server
    cd ${PROJECT_ROOT}/mcp-server
    npm run build
    npm start
-   
+
    # Start N8N (in new terminal)
    n8n start
    ```
 
 3. **Fix Node Type Issues in Workflows**:
+
    ```bash
    # Check current node types in workflows
    grep -r "sqliteNode" n8n-workflows/
-   
+
    # If showing incorrect format, re-download workflows or manually fix
    # Correct format: "type": "n8n-nodes-sqlite3.sqliteNode"
    ```
@@ -595,6 +646,7 @@ npm install n8n-nodes-sqlite3
 ### Verification Commands
 
 **Complete System Verification:**
+
 ```bash
 # 1. Check Node.js version (must be >=20.19)
 node --version
@@ -602,7 +654,7 @@ node --version
 # 2. Check N8N is running
 curl http://localhost:5678
 
-# 3. Check MCP server is running  
+# 3. Check MCP server is running
 curl http://localhost:3001/health
 
 # 4. Verify community node installation
@@ -623,6 +675,7 @@ curl -X POST http://localhost:5678/webhook/test \
 ```
 
 **Success Indicators:**
+
 - Node.js version shows 20.19+ or 22.x
 - N8N responds with HTML content
 - MCP server returns `{"status": "ok"}`
@@ -651,6 +704,7 @@ npm run test:integration
 ```
 
 **Expected Output:**
+
 ```
 🚀 N8N Integration Demo Starting...
 📊 Found 3 active projects to analyze

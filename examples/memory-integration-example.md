@@ -5,6 +5,7 @@ This example demonstrates how to integrate the Project Agent's memory management
 ## Problem Scenario
 
 You're working on a complex React application with multiple developers. Each AI session loses context from previous work, leading to:
+
 - Repeated analysis of the same problems
 - Inconsistent architectural decisions
 - Lost insights from debugging sessions
@@ -31,6 +32,7 @@ You're working on a complex React application with multiple developers. Each AI 
 ```
 
 **Response provides:**
+
 - Previous authentication-related decisions
 - Code changes in auth modules
 - Security considerations discussed
@@ -56,7 +58,11 @@ You're working on a complex React application with multiple developers. Each AI 
       {
         "decision": "Use httpOnly cookies for refresh tokens instead of localStorage",
         "reasoning": "Prevents XSS attacks and follows security best practices",
-        "alternatives_considered": ["localStorage", "sessionStorage", "memory storage"]
+        "alternatives_considered": [
+          "localStorage",
+          "sessionStorage",
+          "memory storage"
+        ]
       }
     ],
     "code_changes": [
@@ -157,18 +163,21 @@ You're working on a complex React application with multiple developers. Each AI 
 # Project Context Rules
 
 ## Memory Management
+
 1. ALWAYS start sessions by retrieving relevant context
 2. Store important decisions and insights
 3. Create knowledge snapshots at milestones
 4. Query existing knowledge before making architectural decisions
 
 ## Session Pattern
+
 1. retrieve_relevant_context for current task
 2. Review returned context before proceeding
 3. store_session_context with results
 4. Include next_steps for continuity
 
 ## Decision Documentation
+
 - Always include reasoning and alternatives
 - Document technical constraints
 - Record design patterns used
@@ -212,9 +221,9 @@ const onFileOpen = async (filePath: string) => {
     const context = await retrieveRelevantContext({
       project_id: getProjectId(),
       current_task: `Working on ${filePath}`,
-      include_code_changes: true
+      include_code_changes: true,
     });
-    
+
     showContextPanel(context);
   }
 };
@@ -225,7 +234,7 @@ const onSignificantChange = async (changes: CodeChange[]) => {
     project_id: getProjectId(),
     session_type: 'implementation',
     code_changes: changes,
-    context_summary: generateSummary(changes)
+    context_summary: generateSummary(changes),
   });
 };
 ```
@@ -233,6 +242,7 @@ const onSignificantChange = async (changes: CodeChange[]) => {
 ## Benefits Demonstrated
 
 ### Before Memory Integration
+
 ```
 Session 1: "Let's implement authentication"
 - Researches JWT best practices
@@ -252,6 +262,7 @@ Session 3: "Let's add token refresh"
 ```
 
 ### After Memory Integration
+
 ```
 Session 1: "Let's implement authentication"
 - Retrieves: No previous auth context
@@ -272,18 +283,21 @@ Session 3: "Let's add token refresh"
 ## Measuring Success
 
 ### Context Continuity
+
 - ✅ Sessions start with relevant background
 - ✅ Decisions build on previous work
 - ✅ Architectural consistency maintained
 - ✅ No repeated analysis of same problems
 
 ### Knowledge Accumulation
+
 - ✅ Project understanding grows over time
 - ✅ Best practices are documented and reused
 - ✅ Mistakes are recorded and avoided
 - ✅ Team knowledge is preserved
 
 ### Development Efficiency
+
 - ✅ Faster onboarding for new team members
 - ✅ Reduced time spent on context switching
 - ✅ Better architectural decisions
@@ -292,6 +306,7 @@ Session 3: "Let's add token refresh"
 ## Common Patterns
 
 ### Feature Development Cycle
+
 ```
 1. retrieve_relevant_context ("implementing feature X")
 2. Review existing patterns and constraints
@@ -302,6 +317,7 @@ Session 3: "Let's add token refresh"
 ```
 
 ### Bug Investigation Cycle
+
 ```
 1. query_project_knowledge ("similar error symptoms")
 2. retrieve_relevant_context ("recent changes in affected area")
@@ -311,6 +327,7 @@ Session 3: "Let's add token refresh"
 ```
 
 ### Code Review Cycle
+
 ```
 1. retrieve_relevant_context ("changes in PR")
 2. Review against established patterns
@@ -338,6 +355,7 @@ Session 3: "Let's add token refresh"
 ```
 
 **Thinking LLM Analysis**:
+
 - Synthesizes historical API performance data
 - Analyzes evolution of client requirements
 - Considers team expertise and migration costs
@@ -362,6 +380,7 @@ Session 3: "Let's add token refresh"
 ```
 
 **Thinking LLM Synthesis**:
+
 - Identifies patterns from previous caching implementations
 - Analyzes what worked well and what caused issues
 - Considers current system constraints and requirements
@@ -385,6 +404,7 @@ Session 3: "Let's add token refresh"
 ```
 
 **Thinking LLM Deep Analysis**:
+
 - Correlates current symptoms with historical issues
 - Analyzes code evolution that might have introduced the problem
 - Considers system architecture and concurrency patterns

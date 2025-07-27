@@ -93,7 +93,10 @@ class MCPClient {
     }
   }
 
-  private async sendRequest(method: string, params: Record<string, any> = {}): Promise<any> {
+  private async sendRequest(
+    method: string,
+    params: Record<string, any> = {}
+  ): Promise<any> {
     const id = ++this.messageId;
     const request: MCPRequest = {
       jsonrpc: '2.0',

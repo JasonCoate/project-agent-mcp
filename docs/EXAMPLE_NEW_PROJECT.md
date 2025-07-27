@@ -23,7 +23,7 @@ cd ecommerce-store
 In your AI assistant (Cursor, Claude, Trae), start a conversation:
 
 ```
-User: "I want to create a new React e-commerce application called 'ecommerce-store'. 
+User: "I want to create a new React e-commerce application called 'ecommerce-store'.
 It should include:
 - User authentication (login/signup)
 - Product catalog with search and filtering
@@ -109,10 +109,12 @@ ecommerce-store/
 ### 5. Review Generated Specifications
 
 #### User Stories (`.specs/user-stories.md`)
+
 ```markdown
 # User Stories - E-commerce Store
 
 ## Customer Stories
+
 - As a customer, I want to browse products by category
 - As a customer, I want to search for specific products
 - As a customer, I want to add items to my cart
@@ -120,44 +122,52 @@ ecommerce-store/
 - As a customer, I want to create an account and track orders
 
 ## Admin Stories
+
 - As an admin, I want to add/edit/remove products
 - As an admin, I want to view sales analytics
 - As an admin, I want to manage customer orders
 ```
 
 #### Architecture (`.specs/architecture.md`)
+
 ```markdown
 # Technical Architecture
 
 ## Frontend
+
 - **Framework**: React 18 with TypeScript
 - **Styling**: Tailwind CSS
 - **State Management**: Redux Toolkit
 - **Routing**: React Router v6
 
 ## Backend
+
 - **Runtime**: Node.js with Express
 - **Database**: MongoDB with Mongoose
 - **Authentication**: JWT tokens
 - **Payments**: Stripe API
 
 ## Deployment
+
 - **Frontend**: Vercel
 - **Backend**: Railway/Heroku
 - **Database**: MongoDB Atlas
 ```
 
 #### Main Tasks (`.specs/tasks.md`)
+
 ```markdown
 # Main Project Tasks - E-commerce Store
 
 ## Project Setup (4 tasks)
+
 - [ ] Set up React project with TypeScript
 - [ ] Configure Tailwind CSS and Redux
 - [ ] Set up development environment
 - [ ] Initialize Git repository and CI/CD
 
 ## Integration Tasks (3 tasks)
+
 - [ ] Integrate all features into main app
 - [ ] End-to-end testing across features
 - [ ] Deploy to production
@@ -166,56 +176,67 @@ ecommerce-store/
 #### Feature-Specific Tasks
 
 **Authentication Feature (`.specs/ecommerce-store/1-feat-authentication/tasks.md`)**
+
 ```markdown
 # Authentication Feature Tasks
 
 ## UI Components (3 tasks)
+
 - [ ] Design login/signup forms
 - [ ] Create password reset flow
 - [ ] Implement user profile page
 
 ## Backend Integration (4 tasks)
+
 - [ ] Implement JWT authentication
 - [ ] Create protected route wrapper
 - [ ] Add session management
 - [ ] Implement logout functionality
 
 ## Testing (2 tasks)
+
 - [ ] Unit tests for auth components
 - [ ] Integration tests for auth flow
 ```
 
 **Product Catalog Feature (`.specs/ecommerce-store/2-feat-product-catalog/tasks.md`)**
+
 ```markdown
 # Product Catalog Feature Tasks
 
 ## Product Display (4 tasks)
+
 - [ ] Design product card components
 - [ ] Implement product listing page
 - [ ] Create product detail page
 - [ ] Add product image gallery
 
 ## Search & Filtering (3 tasks)
+
 - [ ] Add search functionality
 - [ ] Create category filtering
 - [ ] Implement sorting options
 
 ## Admin Management (3 tasks)
+
 - [ ] Create admin product management
 - [ ] Implement inventory tracking
 - [ ] Add bulk product operations
 ```
 
 **Shopping Cart Feature (`.specs/ecommerce-store/3-feat-shopping-cart/tasks.md`)**
+
 ```markdown
 # Shopping Cart Feature Tasks
 
 ## Cart Management (3 tasks)
+
 - [ ] Design cart UI components
 - [ ] Implement cart state management
 - [ ] Add cart persistence
 
 ## Checkout Process (4 tasks)
+
 - [ ] Create checkout flow
 - [ ] Integrate Stripe payment processing
 - [ ] Add order confirmation
@@ -328,7 +349,7 @@ AI: 🛑 Checkpoint: Authentication Feature Review
    ✅ Documentation updated
    ✅ Feature ready for integration
 
-🎯 Status: Authentication feature complete! 
+🎯 Status: Authentication feature complete!
 
 📈 Project Status:
    ✅ Completed Features: 1/5 (20%)
@@ -429,21 +450,25 @@ AI: Great question! Let me analyze the integration points between these features
 ## Key Benefits
 
 ### 🎯 **Structured Approach**
+
 - Clear phases and milestones
 - Detailed task breakdown
 - Progress tracking
 
 ### 📋 **Living Documentation**
+
 - Specifications evolve with your project
 - Always up-to-date task lists
 - Automatic progress sync
 
 ### 🤖 **AI Collaboration**
+
 - Context-aware assistance
 - Project-specific guidance
 - Automated progress tracking
 
 ### 🔄 **Flexibility**
+
 - Modify specs as requirements change
 - Add custom tasks
 - Adapt to your workflow

@@ -12,18 +12,20 @@ This guide explains how to integrate N8N workflows with the Project Agent MCP Se
 The Project Agent MCP Server includes four fully functional N8N workflows that provide automated monitoring, progress tracking, specification validation, and direct MCP integration:
 
 1. ✅ **Project Monitor** - Database-level monitoring of active projects
-2. ✅ **Progress Tracker** - Webhook-based task progress tracking  
+2. ✅ **Progress Tracker** - Webhook-based task progress tracking
 3. ✅ **Spec Validator** - Specification consistency validation
 4. ✅ **MCP Integration** - Direct integration with MCP server tools
 
 ### 🚀 Quick Demo
 
 Run the integration demo to see everything working:
+
 ```bash
 npm run test:integration
 ```
 
 This demonstrates:
+
 - MCP server communication
 - Project progress analysis
 - Webhook simulation
@@ -43,6 +45,7 @@ This demonstrates:
 **Purpose**: Monitors active projects and identifies issues requiring attention.
 
 **Features**:
+
 - Runs every 4 hours via cron schedule
 - Queries active projects from the database
 - Analyzes project statistics (task counts, progress, blocked tasks)
@@ -56,6 +59,7 @@ This demonstrates:
 **Purpose**: Tracks project progress in real-time via webhooks.
 
 **Features**:
+
 - Webhook endpoint: `/progress-update`
 - Calculates overall project progress and velocity
 - Detects progress trends and concerns
@@ -69,6 +73,7 @@ This demonstrates:
 **Purpose**: Validates project specifications for consistency and completeness.
 
 **Features**:
+
 - Webhook endpoint: `/spec-change`
 - Checks for required specification types
 - Validates priority distribution
@@ -82,6 +87,7 @@ This demonstrates:
 **Purpose**: Direct integration with MCP server tools for comprehensive automation.
 
 **Features**:
+
 - Uses MCP CLI to call server tools directly
 - Runs every 6 hours via cron schedule
 - Fetches projects using `list_projects` tool
@@ -106,6 +112,7 @@ This demonstrates:
 ### 2. Configure Database Connections
 
 All workflows are pre-configured with the correct database path:
+
 ```
 ${PROJECT_ROOT}/mcp-server/data/project-agent.db
 ```
@@ -136,6 +143,7 @@ ${PROJECT_ROOT}/mcp-server/data/project-agent.db
 ### Test Webhook Workflows
 
 1. **Progress Tracker Test**:
+
    ```bash
    curl -X POST http://localhost:5678/webhook/progress-update \
      -H "Content-Type: application/json" \
@@ -152,21 +160,25 @@ ${PROJECT_ROOT}/mcp-server/data/project-agent.db
 ## Integration Benefits
 
 ### Automated Monitoring
+
 - **Continuous oversight** of all active projects
 - **Early detection** of issues and bottlenecks
 - **Automated alerts** for projects needing attention
 
 ### Real-time Updates
+
 - **Webhook integration** for immediate progress tracking
 - **Live specification validation** on changes
 - **Instant notifications** for critical issues
 
 ### MCP Server Integration
+
 - **Direct tool access** via MCP CLI
 - **Consistent data handling** through MCP protocols
 - **Enhanced functionality** beyond database queries
 
 ### Comprehensive Logging
+
 - **Centralized memory log** for all automation events
 - **Structured metadata** for analysis and reporting
 - **Audit trail** for automated decisions
@@ -176,6 +188,7 @@ ${PROJECT_ROOT}/mcp-server/data/project-agent.db
 ### Adjusting Schedule Frequency
 
 Modify the cron expressions in schedule triggers:
+
 - **Every hour**: `0 * * * *`
 - **Every 30 minutes**: `*/30 * * * *`
 - **Daily at 9 AM**: `0 9 * * *`
@@ -183,6 +196,7 @@ Modify the cron expressions in schedule triggers:
 ### Adding Notification Channels
 
 Extend workflows with additional nodes:
+
 - **Email notifications** (SMTP node)
 - **Slack alerts** (Slack node)
 - **Discord webhooks** (HTTP Request node)
@@ -191,6 +205,7 @@ Extend workflows with additional nodes:
 ### Custom Analysis Logic
 
 Modify the Function nodes to add:
+
 - **Custom thresholds** for alerts
 - **Project-specific rules** for monitoring
 - **Advanced analytics** and reporting
@@ -205,8 +220,9 @@ Modify the Function nodes to add:
    - Review execution times and performance
 
 2. **Database Logs**:
+
    ```sql
-   SELECT * FROM memory_log 
+   SELECT * FROM memory_log
    WHERE event_type IN ('issue', 'milestone', 'validation')
    ORDER BY created_at DESC;
    ```
@@ -238,6 +254,7 @@ Modify the Function nodes to add:
 ### Multi-Project Environments
 
 For managing multiple project environments:
+
 1. Create environment-specific workflows
 2. Use different database paths
 3. Configure separate notification channels
@@ -245,6 +262,7 @@ For managing multiple project environments:
 ### Integration with External Tools
 
 Extend workflows to integrate with:
+
 - **Jira** for issue tracking
 - **GitHub** for repository monitoring
 - **Confluence** for documentation updates
@@ -253,6 +271,7 @@ Extend workflows to integrate with:
 ### Custom MCP Tool Integration
 
 Add new workflow nodes that call additional MCP tools:
+
 - `create_task` for automated task creation
 - `update_spec` for specification updates
 - `search_context` for intelligent project search

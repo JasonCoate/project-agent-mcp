@@ -136,8 +136,9 @@ class N8NMCPIntegration {
                 inProgressTasks: tasks.filter(t => t.status === 'in-progress').length,
                 blockedTasks: tasks.filter(t => t.status === 'blocked').length,
                 overallProgress: tasks.length > 0
-                    ? Math.round((tasks.filter(t => t.status === 'done').length / tasks.length) * 100)
-                    : 0
+                    ? Math.round((tasks.filter(t => t.status === 'done').length / tasks.length) *
+                        100)
+                    : 0,
             };
             console.log('\n📊 Progress Metrics:');
             console.log(`   Total Tasks: ${metrics.totalTasks}`);
@@ -149,7 +150,7 @@ class N8NMCPIntegration {
             await this.executeMCPTool('add_context_note', {
                 project_id: projectId,
                 content: `Progress webhook triggered. Metrics: ${metrics.overallProgress}% complete, ${metrics.blockedTasks} blocked tasks`,
-                event_type: 'milestone'
+                event_type: 'milestone',
             });
             return metrics;
         }
@@ -163,7 +164,7 @@ class N8NMCPIntegration {
             await this.executeMCPTool('add_context_note', {
                 project_id: projectId,
                 content: `ALERT [${alertType}]: ${message}`,
-                event_type: 'issue'
+                event_type: 'issue',
             });
             console.log(`   📝 Alert logged: ${alertType}`);
         }

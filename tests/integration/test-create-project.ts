@@ -26,9 +26,10 @@ interface MCPResponse {
 
 function testCreateProject(): void {
   console.log('Testing MCP Server - Create Project...');
-  
-  const server: ChildProcess = spawn('node', ['dist/index.js'], {
-    stdio: ['pipe', 'pipe', 'pipe']
+
+  const server: ChildProcess = spawn('node', ['dist/src/index.js'], {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    cwd: '../../mcp-server',
   });
 
   let step: number = 0;
@@ -42,9 +43,9 @@ function testCreateProject(): void {
         name: 'create_project',
         arguments: {
           name: 'Test Project',
-          description: 'A test project for MCP server validation'
-        }
-      }
+          description: 'A test project for MCP server validation',
+        },
+      },
     },
     // Step 2: List projects
     {
@@ -53,9 +54,9 @@ function testCreateProject(): void {
       method: 'tools/call',
       params: {
         name: 'list_projects',
-        arguments: {}
-      }
-    }
+        arguments: {},
+      },
+    },
   ];
 
   function runNextTest(): void {
@@ -74,7 +75,7 @@ function testCreateProject(): void {
     try {
       const response: MCPResponse = JSON.parse(data.toString());
       console.log('✅ Response:', JSON.stringify(response, null, 2));
-      
+
       // Wait a bit before next test
       setTimeout(runNextTest, 1000);
     } catch (e) {

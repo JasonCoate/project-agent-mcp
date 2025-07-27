@@ -36,7 +36,15 @@ export interface Task {
 export interface MemoryEntry {
   id: string;
   project_id: string;
-  event_type: 'spec_change' | 'task_update' | 'milestone' | 'decision' | 'issue' | 'session_context' | 'knowledge_snapshot' | 'note';
+  event_type:
+    | 'spec_change'
+    | 'task_update'
+    | 'milestone'
+    | 'decision'
+    | 'issue'
+    | 'session_context'
+    | 'knowledge_snapshot'
+    | 'note';
   content: string;
   metadata: Record<string, any>;
   timestamp: string;

@@ -10,10 +10,7 @@
       "name": "Spec Change Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [
-        240,
-        300
-      ]
+      "position": [240, 300]
     },
     {
       "parameters": {
@@ -24,10 +21,7 @@
       "name": "Get Project Specs",
       "type": "n8n-nodes-sqlite3.sqliteNode",
       "typeVersion": 1,
-      "position": [
-        460,
-        300
-      ]
+      "position": [460, 300]
     },
     {
       "parameters": {
@@ -36,10 +30,7 @@
       "name": "Validate Specs",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        680,
-        300
-      ]
+      "position": [680, 300]
     },
     {
       "parameters": {
@@ -55,10 +46,7 @@
       "name": "Has Issues?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [
-        900,
-        300
-      ]
+      "position": [900, 300]
     },
     {
       "parameters": {
@@ -69,10 +57,7 @@
       "name": "Log Validation",
       "type": "n8n-nodes-sqlite3.sqliteNode",
       "typeVersion": 1,
-      "position": [
-        1120,
-        300
-      ]
+      "position": [1120, 300]
     },
     {
       "parameters": {
@@ -82,10 +67,7 @@
       "name": "Respond",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [
-        1340,
-        300
-      ]
+      "position": [1340, 300]
     }
   ],
   "connections": {
