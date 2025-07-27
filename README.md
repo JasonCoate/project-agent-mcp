@@ -6,41 +6,43 @@ A self-hosted project management system that integrates with AI assistants throu
 
 ## Quick Start
 
-### 🚀 Automated Setup (Recommended)
+### 🚀 Recommended Installation
 
-```bash
-# Run the setup script
-./scripts/setup-shared.sh
-```
+**One installation, use for all projects**:
 
-That's it! The script will:
-- Install dependencies
-- Show you next steps
-- Provide configuration details
-
-### Manual Setup
-
-**Best for most users**: One installation, use for all projects
-
-1. **Install Project Agent**:
+1. **Clone and setup**:
    ```bash
    git clone <this-repo> ~/tools/project-agent
+   cd ~/tools/project-agent
+   ./scripts/setup-shared.sh  # Installs dependencies
+   ```
+
+2. **Start the MCP server**:
+   ```bash
    cd ~/tools/project-agent/mcp-server
-   npm install
    npm start  # Keep running in background
    ```
 
-2. **Configure your AI assistant** to use `~/tools/project-agent/mcp-server`
+3. **Configure your AI assistant** to use `~/tools/project-agent/mcp-server`
    - See [Quick Start Guide](docs/QUICKSTART.md) for detailed setup
 
-3. **Create projects anywhere**:
+4. **Create projects anywhere**:
    ```bash
    mkdir my-awesome-app && cd my-awesome-app
    # Then in your AI assistant:
    "Create a new project called 'my-awesome-app' for a React web application"
    ```
 
-4. **The agent automatically creates**:
+### Alternative: Manual Setup
+
+```bash
+git clone <this-repo> ~/tools/project-agent
+cd ~/tools/project-agent/mcp-server
+npm install
+npm start  # Keep running in background
+```
+
+**The agent automatically creates**:
    - `.specs/` folder with project specifications
    - Feature directories with conventional commit prefixes (e.g., `1-feat-authentication/`)
    - Project-specific organization under `.specs/project-name/`

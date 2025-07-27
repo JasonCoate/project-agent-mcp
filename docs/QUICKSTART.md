@@ -10,21 +10,25 @@ Get Project Agent running in 5 minutes.
 
 ## Installation
 
-### Manual Setup
+### Recommended Setup
 **Best for most users:** One installation, use for all projects
 
 **Install Project Agent:**
 
 ```bash
 git clone <this-repo> ~/tools/project-agent
+cd ~/tools/project-agent
+./scripts/setup-shared.sh  # Installs dependencies
+```
+
+**Start the MCP server:**
+
+```bash
 cd ~/tools/project-agent/mcp-server
-npm install
 npm start  # Keep running in background
 ```
 
-Configure your AI assistant to use `~/tools/project-agent/mcp-server`
-
-See [Quick Start Guide](docs/QUICKSTART.md) for detailed setup
+**Configure your AI assistant** to use `~/tools/project-agent/mcp-server`
 
 **Create projects anywhere:**
 

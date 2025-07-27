@@ -18,8 +18,11 @@ This guide explains how to set up and use the Project Agent MCP server for manag
 ```bash
 # One-time setup
 git clone <this-repo> ~/tools/project-agent
+cd ~/tools/project-agent
+./scripts/setup-shared.sh  # Installs dependencies
+
+# Start the server
 cd ~/tools/project-agent/mcp-server
-npm install
 npm start  # Keep running in background
 
 # Configure your AI assistants to use:
@@ -64,8 +67,8 @@ This is the most efficient approach for most developers:
 1. **Install the Project Agent**:
    ```bash
    git clone <this-repo> ~/tools/project-agent
-   cd ~/tools/project-agent/mcp-server
-   npm install
+   cd ~/tools/project-agent
+   ./scripts/setup-shared.sh  # Installs dependencies
    ```
 
 2. **Configure your AI assistants**:
