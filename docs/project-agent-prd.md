@@ -822,12 +822,14 @@ export class TaskManagerTool {
         }
       },
       {
-        name: "update_task_progress",
-        description: "Update task status and progress",
+        name: "update_feature_task",
+        description: "Update task status within a specific feature",
         inputSchema: {
           type: "object",
           properties: {
-            id: { type: "string", description: "Task ID" },
+            project_id: { type: "string", description: "Project ID" },
+            feature_directory: { type: "string", description: "Feature directory name (e.g., 1-feat-user-authentication)" },
+            task_id: { type: "string", description: "Task ID" },
             status: { 
               type: "string", 
               enum: ["todo", "in-progress", "review", "done", "blocked"]
@@ -840,7 +842,7 @@ export class TaskManagerTool {
             },
             notes: { type: "string", description: "Progress notes" }
           },
-          required: ["id"]
+          required: ["project_id", "feature_directory", "task_id"]
         }
       },
       {
@@ -857,6 +859,56 @@ export class TaskManagerTool {
             }
           },
           required: ["project_id"]
+        }
+      },
+      {
+        name: "create_feature_directory",
+        description: "Create feature directory structure with specs, tasks, and documentation using conventional commit prefixes",
+        inputSchema: {
+          type: "object",
+          properties: {
+            project_id: { type: "string", description: "Project ID" },
+            feature_name: { type: "string", description: "Feature name (will be formatted with conventional commit prefix)" },
+            workflow_type: { type: "string", description: "Conventional commit type (feat, fix, docs, style, refactor, test, chore)", default: "feat" },
+            description: { type: "string", description: "Feature description" }
+          },
+          required: ["project_id", "feature_name"]
+        }
+      },
+      {
+        name: "get_feature_progress",
+        description: "Get progress summary for a specific feature",
+        inputSchema: {
+          type: "object",
+          properties: {
+            project_id: { type: "string", description: "Project ID" },
+            feature_directory: { type: "string", description: "Feature directory name (e.g., 1-feat-user-authentication)" }
+          },
+          required: ["project_id", "feature_directory"]
+        }
+      },
+      {
+        name: "list_project_features",
+        description: "List all features for a project with their progress",
+        inputSchema: {
+          type: "object",
+          properties: {
+            project_id: { type: "string", description: "Project ID" }
+          },
+          required: ["project_id"]
+        }
+      },
+      {
+        name: "create_feature_checkpoint",
+        description: "Create a checkpoint for a completed feature",
+        inputSchema: {
+          type: "object",
+          properties: {
+            project_id: { type: "string", description: "Project ID" },
+            feature_directory: { type: "string", description: "Feature directory name (e.g., 1-feat-user-authentication)" },
+            notes: { type: "string", description: "Checkpoint notes" }
+          },
+          required: ["project_id", "feature_directory"]
         }
       },
       {
@@ -2015,6 +2067,15 @@ const context = await mcp.call("get_project_context", {
   project_id: "project-123"
 });
 
+// Create a feature directory structure
+const featureDir = await mcp.call("create_feature_directory", {
+  project_id: "project-123",
+  feature_name: "user-authentication",
+  workflow_type: "feat",
+  description: "User login and registration system"
+});
+// Creates directory: .specs/project-123/1-feat-user-authentication/
+
 // Create a new feature spec
 const specId = await mcp.call("create_spec", {
   project_id: "project-123",
@@ -2030,6 +2091,34 @@ await mcp.call("create_task", {
   spec_id: specId,
   title: "Implement JWT authentication",
   description: "Set up JWT token-based auth system"
+});
+
+// Update feature task progress
+await mcp.call("update_feature_task", {
+  project_id: "project-123",
+  feature_directory: "1-feat-user-authentication",
+  task_id: "task-123",
+  status: "in-progress",
+  progress: 75,
+  notes: "JWT implementation almost complete"
+});
+
+// Get feature progress summary
+const progress = await mcp.call("get_feature_progress", {
+  project_id: "project-123",
+  feature_directory: "1-feat-user-authentication"
+});
+
+// List all project features
+const features = await mcp.call("list_project_features", {
+  project_id: "project-123"
+});
+
+// Create feature checkpoint when complete
+await mcp.call("create_feature_checkpoint", {
+  project_id: "project-123",
+  feature_directory: "1-feat-user-authentication",
+  notes: "Feature completed and tested successfully"
 });
 ````
 
