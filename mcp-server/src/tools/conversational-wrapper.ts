@@ -5,11 +5,10 @@ import { DatabaseManager } from '../database.js';
  * and formatted output before and after tool calls
  */
 export class ConversationalWrapper {
-  private _db: DatabaseManager;
   private sessionProgress: Map<string, any> = new Map();
 
   constructor(db: DatabaseManager) {
-    this._db = db;
+    // Database manager passed but not currently used in this implementation
   }
 
   /**
